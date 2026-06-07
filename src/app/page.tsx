@@ -31,9 +31,8 @@ export default async function HomePage() {
       <section className="py-6">
         <SectionHeader title="All products" href="/products" />
         <ProductGrid
-          products={products.slice(0, 6)}
+          products={products.slice(0, 4)}
           singleLineTitle
-          cardVariant="shelf"
           emptyMessage={
             isShopifyConfigured()
               ? "No products found in your Shopify store yet."
