@@ -56,12 +56,23 @@ export const getProductByHandleQuery = `
       id
       handle
       title
+      vendor
       description
       featuredImage {
         url
         altText
         width
         height
+      }
+      images(first: 10) {
+        edges {
+          node {
+            url
+            altText
+            width
+            height
+          }
+        }
       }
       priceRange {
         minVariantPrice {
@@ -87,6 +98,14 @@ export const getProductByHandleQuery = `
               amount
               currencyCode
             }
+          }
+        }
+      }
+      collections(first: 20) {
+        edges {
+          node {
+            handle
+            title
           }
         }
       }

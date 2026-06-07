@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { Price } from "@/components/price";
+import { ProductImageCarousel } from "@/components/product-image-carousel";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getProductByHandle } from "@/lib/shopify";
+import type { Image } from "@/lib/shopify/types";
 
 type ProductPageProps = {
   params: Promise<{ handle: string }>;
@@ -45,26 +46,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   const defaultVariant = product.variants.edges[0]?.node;
-  const image = product.featuredImage;
+  const images: Image[] = product.images.edges.map(({ node }) => node);
+  const carouselImages =
+    images.length > 0
+      ? images
+      : product.featuredImage
+        ? [product.featuredImage]
+        : [];
 
   return (
     <div className="pb-6">
-      <div className="relative aspect-square bg-surface sm:mx-auto sm:mt-6 sm:max-w-lg sm:overflow-hidden sm:rounded-2xl">
-        {image ? (
-          <Image
-            src={image.url}
-            alt={image.altText ?? product.title}
-            fill
-            priority
-            sizes="(max-width: 640px) 100vw, 512px"
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-muted">
-            No image available
-          </div>
-        )}
-      </div>
+      <ProductImageCarousel images={carouselImages} title={product.title} />
 
       <div className="flex flex-col gap-5 px-4 py-6 sm:px-6 lg:mx-auto lg:max-w-lg lg:px-8">
         <div>

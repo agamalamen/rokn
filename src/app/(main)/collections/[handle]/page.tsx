@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import { ProductGrid } from "@/components/product-grid";
+import { notFound, redirect } from "next/navigation";
+import { CollectionView } from "@/components/collection-view";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getCollectionByHandle } from "@/lib/shopify";
+import { getShopUrl, isShopCollection } from "@/lib/shopify/vendor-collection";
 
 type CollectionPageProps = {
   params: Promise<{ handle: string }>;
@@ -43,29 +43,9 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
     notFound();
   }
 
-  return (
-    <div className="py-6">
-      {collection.image && (
-        <div className="relative mx-4 mb-6 aspect-[16/9] overflow-hidden rounded-2xl bg-surface sm:mx-6 lg:mx-8">
-          <Image
-            src={collection.image.url}
-            alt={collection.image.altText ?? collection.title}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
-      )}
+  if (isShopCollection(collection)) {
+    redirect(getShopUrl(collection));
+  }
 
-      <div className="mb-6 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold tracking-tight">{collection.title}</h1>
-        {collection.description && (
-          <p className="mt-2 text-sm text-muted">{collection.description}</p>
-        )}
-      </div>
-
-      <ProductGrid products={collection.products} />
-    </div>
-  );
+  return <CollectionView collection={collection} />;
 }

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SectionHeader } from "@/components/section-header";
 import type { Collection } from "@/lib/shopify/types";
+import { getShopUrl } from "@/lib/shopify/vendor-collection";
 
 type CollectionShelfProps = {
   title: string;
@@ -25,7 +26,7 @@ export function CollectionShelf({
         {collections.map((collection) => (
           <Link
             key={collection.id}
-            href={`/collections/${collection.handle}`}
+            href={getShopUrl(collection)}
             className="group w-36 shrink-0 sm:w-44"
           >
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-surface">

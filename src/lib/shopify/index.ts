@@ -17,6 +17,7 @@ import {
   updateCartLineMutation,
 } from "@/lib/shopify/queries";
 import type { Cart, Collection, Product, ProductCard } from "@/lib/shopify/types";
+import { slugifyShopName } from "@/lib/shopify/vendor-collection";
 
 type ShopifyFetchOptions = {
   query: string;
@@ -177,6 +178,20 @@ export async function getCollectionByHandle(
     ...data.collection,
     products: data.collection.products.edges.map((edge) => edge.node),
   };
+}
+
+export async function getShopCollectionBySlug(shopSlug: string) {
+  const normalizedSlug = slugifyShopName(normalizeHandle(shopSlug));
+  const collections = await getCollections(100);
+  const match = collections.find(
+    (collection) => slugifyShopName(collection.title) === normalizedSlug,
+  );
+
+  if (!match) {
+    return null;
+  }
+
+  return getCollectionByHandle(match.handle);
 }
 
 export async function createCart(

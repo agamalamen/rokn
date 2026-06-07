@@ -22,14 +22,21 @@ export type Product = {
   id: string;
   handle: string;
   title: string;
+  vendor: string;
   description: string;
   featuredImage: Image | null;
+  images: {
+    edges: { node: Image }[];
+  };
   priceRange: {
     minVariantPrice: Money;
     maxVariantPrice: Money;
   };
   variants: {
     edges: { node: ProductVariant }[];
+  };
+  collections: {
+    edges: { node: Pick<Collection, "handle" | "title"> }[];
   };
 };
 

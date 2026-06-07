@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getCollections } from "@/lib/shopify";
+import { getShopUrl } from "@/lib/shopify/vendor-collection";
 
 export const metadata: Metadata = {
   title: "Collections",
@@ -27,7 +28,7 @@ export default async function CollectionsPage() {
           {collections.map((collection) => (
             <Link
               key={collection.id}
-              href={`/collections/${collection.handle}`}
+              href={getShopUrl(collection)}
               className="group"
             >
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-surface">
