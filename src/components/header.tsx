@@ -4,6 +4,7 @@ import { fetchCart } from "@/actions/cart";
 const navLinks = [
   { href: "/products", label: "Shop" },
   { href: "/collections", label: "Collections" },
+  { href: "/about", label: "About" },
 ];
 
 export async function Header() {
