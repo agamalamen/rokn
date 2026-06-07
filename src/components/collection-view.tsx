@@ -1,12 +1,19 @@
 import Image from "next/image";
 import { ProductGrid } from "@/components/product-grid";
+import { ShopFilteredProducts } from "@/components/shop-filtered-products";
 import type { Collection, ProductCard } from "@/lib/shopify/types";
 
 type CollectionViewProps = {
   collection: Collection & { products: ProductCard[] };
+  hideTitle?: boolean;
+  showFilterPills?: boolean;
 };
 
-export function CollectionView({ collection }: CollectionViewProps) {
+export function CollectionView({
+  collection,
+  hideTitle = false,
+  showFilterPills = false,
+}: CollectionViewProps) {
   return (
     <div className="py-6">
       {collection.image && (
@@ -22,14 +29,26 @@ export function CollectionView({ collection }: CollectionViewProps) {
         </div>
       )}
 
-      <div className="mb-6 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold tracking-tight">{collection.title}</h1>
-        {collection.description && (
-          <p className="mt-2 text-sm text-muted">{collection.description}</p>
-        )}
-      </div>
+      {!hideTitle && (
+        <div className="mb-6 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl font-bold tracking-tight">{collection.title}</h1>
+          {collection.description && (
+            <p className="mt-2 text-sm text-muted">{collection.description}</p>
+          )}
+        </div>
+      )}
 
-      <ProductGrid products={collection.products} />
+      {hideTitle && collection.description && (
+        <div className="mb-6 px-4 sm:px-6 lg:px-8">
+          <p className="text-sm text-muted">{collection.description}</p>
+        </div>
+      )}
+
+      {showFilterPills ? (
+        <ShopFilteredProducts products={collection.products} />
+      ) : (
+        <ProductGrid products={collection.products} />
+      )}
     </div>
   );
 }

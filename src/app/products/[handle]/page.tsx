@@ -58,7 +58,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <div className="pb-6">
       <ProductImageCarousel images={carouselImages} title={product.title} />
 
-      <div className="flex flex-col gap-5 px-4 py-6 sm:px-6 lg:mx-auto lg:max-w-lg lg:px-8">
+      <div className="flex flex-col gap-4 px-4 py-4 sm:gap-5 sm:px-6 sm:py-6 lg:mx-auto lg:max-w-lg lg:px-8">
         <div>
           <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
             {product.title}

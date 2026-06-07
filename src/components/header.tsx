@@ -16,7 +16,7 @@ export async function Header() {
   return (
     <header className="bg-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
+        <div className="relative flex items-center justify-center py-0.5">
           <Link
             href="/"
             className="text-[1.75rem] font-extrabold tracking-[-0.04em] text-accent sm:text-4xl"
@@ -24,19 +24,19 @@ export async function Header() {
             Rokn
           </Link>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            <nav className="hidden items-center gap-6 sm:flex">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-medium text-muted transition-colors hover:text-foreground"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+          <nav className="absolute left-0 hidden items-center gap-6 sm:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-muted transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
+          <div className="absolute right-0 flex items-center gap-2 sm:gap-4">
             <HeaderCartLink itemCount={itemCount} />
             <HeaderProfileLink />
           </div>

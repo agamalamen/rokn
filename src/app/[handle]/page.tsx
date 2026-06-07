@@ -42,5 +42,5 @@ export default async function ShopPage({ params }: ShopPageProps) {
     notFound();
   }
 
-  return <CollectionView collection={collection} />;
+  return <CollectionView collection={collection} hideTitle showFilterPills />;
 }

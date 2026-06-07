@@ -5,6 +5,7 @@ import {
   LayoutGrid,
   ShoppingBag,
   ShoppingCart,
+  User,
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -16,6 +17,7 @@ const navItems: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/products", label: "Discover", icon: ShoppingBag },
   { href: "/collections", label: "Categories", icon: LayoutGrid },
   { href: "/cart", label: "Cart", icon: ShoppingCart },
+  { href: "/account", label: "Profile", icon: User },
 ];
 
 type MobileNavClientProps = {
@@ -29,6 +31,10 @@ function isNavItemActive(href: string, pathname: string) {
 
   if (href === "/products") {
     return pathname === "/products";
+  }
+
+  if (href === "/account") {
+    return pathname.startsWith("/account");
   }
 
   return pathname.startsWith(href);

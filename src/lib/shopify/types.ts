@@ -23,6 +23,7 @@ export type Product = {
   handle: string;
   title: string;
   vendor: string;
+  productType: string;
   description: string;
   featuredImage: Image | null;
   images: {
@@ -42,7 +43,7 @@ export type Product = {
 
 export type ProductCard = Pick<
   Product,
-  "id" | "handle" | "title" | "featuredImage" | "priceRange"
+  "id" | "handle" | "title" | "productType" | "featuredImage" | "priceRange"
 >;
 
 export type Collection = {

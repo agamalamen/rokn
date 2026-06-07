@@ -3,6 +3,7 @@ export const productCardFragment = `
     id
     handle
     title
+    productType
     featuredImage {
       url
       altText
@@ -57,6 +58,7 @@ export const getProductByHandleQuery = `
       handle
       title
       vendor
+      productType
       description
       featuredImage {
         url
