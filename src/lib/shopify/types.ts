@@ -1,0 +1,83 @@
+export type Money = {
+  amount: string;
+  currencyCode: string;
+};
+
+export type Image = {
+  url: string;
+  altText: string | null;
+  width?: number;
+  height?: number;
+};
+
+export type ProductVariant = {
+  id: string;
+  title: string;
+  availableForSale: boolean;
+  selectedOptions: { name: string; value: string }[];
+  price: Money;
+};
+
+export type Product = {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  featuredImage: Image | null;
+  priceRange: {
+    minVariantPrice: Money;
+    maxVariantPrice: Money;
+  };
+  variants: {
+    edges: { node: ProductVariant }[];
+  };
+};
+
+export type ProductCard = Pick<
+  Product,
+  "id" | "handle" | "title" | "featuredImage" | "priceRange"
+>;
+
+export type Collection = {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  image: Image | null;
+};
+
+export type CartLine = {
+  id: string;
+  quantity: number;
+  merchandise: {
+    id: string;
+    title: string;
+    product: {
+      handle: string;
+      title: string;
+      featuredImage: Image | null;
+    };
+    price: Money;
+  };
+};
+
+export type Cart = {
+  id: string;
+  checkoutUrl: string;
+  totalQuantity: number;
+  cost: {
+    subtotalAmount: Money;
+    totalAmount: Money;
+  };
+  lines: {
+    edges: { node: CartLine }[];
+  };
+};
+
+export type Connection<T> = {
+  edges: { node: T }[];
+  pageInfo: {
+    hasNextPage: boolean;
+    endCursor: string | null;
+  };
+};

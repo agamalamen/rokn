@@ -1,0 +1,81 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import {
+  addToCart,
+  createCart,
+  getCart,
+  removeFromCart,
+  updateCartLine,
+} from "@/lib/shopify";
+import { CART_COOKIE_MAX_AGE, CART_COOKIE_NAME } from "@/lib/constants";
+
+async function getOrCreateCartId(): Promise<string> {
+  const cookieStore = await cookies();
+  const existingCartId = cookieStore.get(CART_COOKIE_NAME)?.value;
+
+  if (existingCartId) {
+    const cart = await getCart(existingCartId);
+    if (cart) {
+      return cart.id;
+    }
+  }
+
+  const cart = await createCart();
+  cookieStore.set(CART_COOKIE_NAME, cart.id, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: CART_COOKIE_MAX_AGE,
+    path: "/",
+  });
+
+  return cart.id;
+}
+
+export async function addItemToCart(variantId: string, quantity = 1) {
+  const cartId = await getOrCreateCartId();
+  await addToCart(cartId, [{ merchandiseId: variantId, quantity }]);
+  revalidatePath("/", "layout");
+}
+
+export async function updateItemQuantity(lineId: string, quantity: number) {
+  const cookieStore = await cookies();
+  const cartId = cookieStore.get(CART_COOKIE_NAME)?.value;
+
+  if (!cartId) {
+    throw new Error("Cart not found");
+  }
+
+  if (quantity <= 0) {
+    await removeFromCart(cartId, [lineId]);
+  } else {
+    await updateCartLine(cartId, [{ id: lineId, quantity }]);
+  }
+
+  revalidatePath("/", "layout");
+}
+
+export async function removeItemFromCart(lineId: string) {
+  const cookieStore = await cookies();
+  const cartId = cookieStore.get(CART_COOKIE_NAME)?.value;
+
+  if (!cartId) {
+    throw new Error("Cart not found");
+  }
+
+  await removeFromCart(cartId, [lineId]);
+  revalidatePath("/", "layout");
+}
+
+export async function fetchCart() {
+  const cookieStore = await cookies();
+  const cartId = cookieStore.get(CART_COOKIE_NAME)?.value;
+
+  if (!cartId) {
+    return null;
+  }
+
+  return getCart(cartId);
+}
