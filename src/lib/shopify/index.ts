@@ -117,13 +117,27 @@ export async function searchProducts(
   return data.search.edges.map((edge) => edge.node);
 }
 
+function normalizeHandle(handle: string): string {
+  try {
+    return decodeURIComponent(handle);
+  } catch {
+    return handle;
+  }
+}
+
+function handleCacheTag(prefix: string, handle: string): string {
+  return `${prefix}-${encodeURIComponent(normalizeHandle(handle))}`;
+}
+
 export async function getProductByHandle(
   handle: string,
 ): Promise<Product | null> {
+  const normalizedHandle = normalizeHandle(handle);
   const data = await shopifyFetch<{ product: Product | null }>({
     query: getProductByHandleQuery,
-    variables: { handle },
-    tags: [`product-${handle}`],
+    variables: { handle: normalizedHandle },
+    cache: "no-store",
+    tags: [handleCacheTag("product", normalizedHandle)],
   });
 
   return data.product;
@@ -145,12 +159,14 @@ export async function getCollectionByHandle(
   handle: string,
   first = 24,
 ): Promise<(Collection & { products: ProductCard[] }) | null> {
+  const normalizedHandle = normalizeHandle(handle);
   const data = await shopifyFetch<{
     collection: (Collection & { products: { edges: { node: ProductCard }[] } }) | null;
   }>({
     query: getCollectionByHandleQuery,
-    variables: { handle, first },
-    tags: [`collection-${handle}`],
+    variables: { handle: normalizedHandle, first },
+    cache: "no-store",
+    tags: [handleCacheTag("collection", normalizedHandle)],
   });
 
   if (!data.collection) {

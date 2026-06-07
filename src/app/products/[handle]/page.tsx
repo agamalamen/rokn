@@ -10,6 +10,8 @@ type ProductPageProps = {
   params: Promise<{ handle: string }>;
 };
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {

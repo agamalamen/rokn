@@ -12,8 +12,8 @@ import { usePathname } from "next/navigation";
 
 const navItems: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/", label: "Home", icon: House },
-  { href: "/products", label: "Shop", icon: ShoppingBag },
-  { href: "/collections", label: "Collections", icon: LayoutGrid },
+  { href: "/products", label: "Discover", icon: ShoppingBag },
+  { href: "/collections", label: "Categories", icon: LayoutGrid },
   { href: "/cart", label: "Cart", icon: ShoppingCart },
 ];
 

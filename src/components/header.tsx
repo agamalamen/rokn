@@ -19,7 +19,7 @@ export async function Header() {
         <div className="flex items-center justify-between gap-4">
           <Link
             href="/"
-            className="text-3xl font-bold tracking-tight text-accent sm:text-4xl"
+            className="text-[1.75rem] font-extrabold tracking-[-0.04em] text-accent sm:text-4xl"
           >
             Rokn
           </Link>
