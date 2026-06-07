@@ -13,6 +13,7 @@ import {
   getProductByHandleQuery,
   getProductsQuery,
   removeFromCartMutation,
+  searchProductsQuery,
   updateCartLineMutation,
 } from "@/lib/shopify/queries";
 import type { Cart, Collection, Product, ProductCard } from "@/lib/shopify/types";
@@ -94,6 +95,26 @@ export async function getProducts(first = 12): Promise<ProductCard[]> {
   });
 
   return data.products.edges.map((edge) => edge.node);
+}
+
+export async function searchProducts(
+  query: string,
+  first = 24,
+): Promise<ProductCard[]> {
+  const trimmed = query.trim();
+  if (!trimmed) {
+    return [];
+  }
+
+  const data = await shopifyFetch<{
+    search: { edges: { node: ProductCard }[] };
+  }>({
+    query: searchProductsQuery,
+    variables: { query: trimmed, first },
+    cache: "no-store",
+  });
+
+  return data.search.edges.map((edge) => edge.node);
 }
 
 export async function getProductByHandle(

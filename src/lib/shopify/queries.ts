@@ -35,6 +35,21 @@ export const getProductsQuery = `
   }
 `;
 
+export const searchProductsQuery = `
+  ${productCardFragment}
+  query searchProducts($query: String!, $first: Int!) {
+    search(query: $query, first: $first, types: [PRODUCT]) {
+      edges {
+        node {
+          ... on Product {
+            ...ProductCard
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const getProductByHandleQuery = `
   query getProductByHandle($handle: String!) {
     product(handle: $handle) {
