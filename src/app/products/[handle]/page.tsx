@@ -46,60 +46,60 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const image = product.featuredImage;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <div className="relative aspect-square overflow-hidden rounded-3xl bg-stone-100">
-          {image ? (
-            <Image
-              src={image.url}
-              alt={image.altText ?? product.title}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center text-stone-400">
-              No image available
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-6">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">{product.title}</h1>
-            <div className="mt-4">
-              <Price amount={product.priceRange.minVariantPrice} />
-            </div>
+    <div className="pb-6">
+      <div className="relative aspect-square bg-surface sm:mx-auto sm:mt-6 sm:max-w-lg sm:overflow-hidden sm:rounded-2xl">
+        {image ? (
+          <Image
+            src={image.url}
+            alt={image.altText ?? product.title}
+            fill
+            priority
+            sizes="(max-width: 640px) 100vw, 512px"
+            className="object-cover"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-muted">
+            No image available
           </div>
+        )}
+      </div>
 
-          {product.description && (
-            <div
-              className="prose prose-stone max-w-none text-stone-600"
-              dangerouslySetInnerHTML={{ __html: product.description }}
-            />
-          )}
-
-          {defaultVariant && (
-            <AddToCartButton
-              variantId={defaultVariant.id}
-              availableForSale={defaultVariant.availableForSale}
-            />
-          )}
-
-          {product.variants.edges.length > 1 && (
-            <div className="rounded-2xl border border-stone-200 bg-white p-4">
-              <p className="text-sm font-medium text-stone-900">Variants</p>
-              <ul className="mt-3 space-y-2 text-sm text-stone-600">
-                {product.variants.edges.map(({ node }) => (
-                  <li key={node.id}>
-                    {node.title} — {node.availableForSale ? "In stock" : "Sold out"}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+      <div className="flex flex-col gap-5 px-4 py-6 sm:px-6 lg:mx-auto lg:max-w-lg lg:px-8">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
+            {product.title}
+          </h1>
+          <div className="mt-2">
+            <Price amount={product.priceRange.minVariantPrice} className="text-base" />
+          </div>
         </div>
+
+        {product.description && (
+          <div
+            className="prose prose-sm max-w-none text-muted"
+            dangerouslySetInnerHTML={{ __html: product.description }}
+          />
+        )}
+
+        {defaultVariant && (
+          <AddToCartButton
+            variantId={defaultVariant.id}
+            availableForSale={defaultVariant.availableForSale}
+          />
+        )}
+
+        {product.variants.edges.length > 1 && (
+          <div className="rounded-2xl bg-surface p-4">
+            <p className="text-sm font-semibold text-foreground">Variants</p>
+            <ul className="mt-2 space-y-1.5 text-sm text-muted">
+              {product.variants.edges.map(({ node }) => (
+                <li key={node.id}>
+                  {node.title} — {node.availableForSale ? "In stock" : "Sold out"}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,37 @@
+import { ProductCard } from "@/components/product-card";
+import { SectionHeader } from "@/components/section-header";
+import type { ProductCard as ProductCardType } from "@/lib/shopify/types";
+
+type ProductShelfProps = {
+  title: string;
+  products: ProductCardType[];
+  href?: string;
+  singleLineTitle?: boolean;
+};
+
+export function ProductShelf({
+  title,
+  products,
+  href,
+  singleLineTitle = false,
+}: ProductShelfProps) {
+  if (products.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="py-6">
+      <SectionHeader title={title} href={href} />
+      <div className="shelf-scroll flex gap-3 overflow-x-auto px-4 sm:gap-4 sm:px-6 lg:px-8">
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            variant="shelf"
+            singleLineTitle={singleLineTitle}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}

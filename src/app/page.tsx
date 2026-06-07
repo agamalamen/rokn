@@ -1,54 +1,39 @@
-import Link from "next/link";
 import { ProductGrid } from "@/components/product-grid";
+import { ProductShelf } from "@/components/product-shelf";
+import { SectionHeader } from "@/components/section-header";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getProducts } from "@/lib/shopify";
 
 export default async function HomePage() {
-  const products = isShopifyConfigured() ? await getProducts(8) : [];
+  const products = isShopifyConfigured() ? await getProducts(12) : [];
+
+  const featured = products.slice(0, 8);
+  const trending = products.slice(4, 12);
 
   return (
-    <div>
-      <section className="border-b border-stone-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-20 sm:px-6 lg:px-8">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-stone-500">
-            New season
-          </p>
-          <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
-            Curated essentials for everyday living
-          </h1>
-          <p className="max-w-xl text-lg text-stone-600">
-            Discover products from your Shopify store, delivered through a fast
-            headless storefront built with Next.js.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <Link
-              href="/products"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-stone-900 px-6 text-sm font-semibold text-white transition-colors hover:bg-stone-700"
-            >
-              Shop all
-            </Link>
-            <Link
-              href="/collections"
-              className="inline-flex h-12 items-center justify-center rounded-full border border-stone-300 px-6 text-sm font-semibold text-stone-900 transition-colors hover:bg-stone-100"
-            >
-              Browse collections
-            </Link>
-          </div>
-        </div>
-      </section>
+    <div className="pb-4">
+      <ProductShelf
+        title="Featured for you"
+        products={featured}
+        href="/products"
+        singleLineTitle
+      />
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight">Featured products</h2>
-            <p className="mt-2 text-stone-600">Best sellers from your Shopify catalog</p>
-          </div>
-          <Link href="/products" className="text-sm font-medium text-stone-900 hover:underline">
-            View all
-          </Link>
-        </div>
+      {trending.length > 0 && (
+        <ProductShelf
+          title="Trending now"
+          products={trending}
+          href="/products"
+          singleLineTitle
+        />
+      )}
+
+      <section className="py-6">
+        <SectionHeader title="All products" href="/products" />
         <ProductGrid
-          products={products}
+          products={products.slice(0, 6)}
+          singleLineTitle
+          cardVariant="shelf"
           emptyMessage={
             isShopifyConfigured()
               ? "No products found in your Shopify store yet."

@@ -10,9 +10,9 @@ type PriceProps = {
 export function Price({ amount, compareAt, className = "" }: PriceProps) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <span className="font-medium text-stone-900">{formatMoney(amount)}</span>
+      <span className="font-medium text-foreground">{formatMoney(amount)}</span>
       {compareAt && parseFloat(compareAt.amount) > parseFloat(amount.amount) && (
-        <span className="text-sm text-stone-400 line-through">
+        <span className="text-sm text-muted line-through">
           {formatMoney(compareAt)}
         </span>
       )}

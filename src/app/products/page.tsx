@@ -11,11 +11,11 @@ export default async function ProductsPage() {
   const products = isShopifyConfigured() ? await getProducts(24) : [];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-10">
-        <h1 className="text-3xl font-semibold tracking-tight">All products</h1>
-        <p className="mt-2 text-stone-600">
-          Browse the full catalog from your Shopify store.
+    <div className="py-6">
+      <div className="mb-6 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-2xl font-bold tracking-tight">All products</h1>
+        <p className="mt-1 text-sm text-muted">
+          Browse the full catalog
         </p>
       </div>
       <ProductGrid products={products} />

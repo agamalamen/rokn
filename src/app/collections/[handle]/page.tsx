@@ -42,24 +42,24 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-10 grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{collection.title}</h1>
-          {collection.description && (
-            <p className="mt-4 max-w-2xl text-stone-600">{collection.description}</p>
-          )}
+    <div className="py-6">
+      {collection.image && (
+        <div className="relative mx-4 mb-6 aspect-[16/9] overflow-hidden rounded-2xl bg-surface sm:mx-6 lg:mx-8">
+          <Image
+            src={collection.image.url}
+            alt={collection.image.altText ?? collection.title}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
         </div>
-        {collection.image && (
-          <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-stone-100">
-            <Image
-              src={collection.image.url}
-              alt={collection.image.altText ?? collection.title}
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
+      )}
+
+      <div className="mb-6 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-2xl font-bold tracking-tight">{collection.title}</h1>
+        {collection.description && (
+          <p className="mt-2 text-sm text-muted">{collection.description}</p>
         )}
       </div>
 

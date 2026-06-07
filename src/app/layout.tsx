@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { MobileNav } from "@/components/mobile-nav";
 import { SetupBanner } from "@/components/setup-banner";
 import "./globals.css";
 
@@ -33,11 +34,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-stone-50 text-stone-900">
+      <body className="flex min-h-full flex-col bg-white text-foreground">
         <SetupBanner />
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-nav">{children}</main>
         <Footer />
+        <MobileNav />
       </body>
     </html>
   );

@@ -14,42 +14,48 @@ export default async function CartPage() {
   const lines = cart?.lines.edges.map((edge) => edge.node) ?? [];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-semibold tracking-tight">Your cart</h1>
+    <div className="py-6">
+      <div className="mb-6 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-2xl font-bold tracking-tight">Your cart</h1>
+        {lines.length > 0 && (
+          <p className="mt-1 text-sm text-muted">
+            {cart?.totalQuantity} {cart?.totalQuantity === 1 ? "item" : "items"}
+          </p>
+        )}
+      </div>
 
       {lines.length === 0 ? (
-        <div className="mt-10 rounded-2xl border border-dashed border-stone-300 px-6 py-16 text-center">
-          <p className="text-stone-600">Your cart is empty.</p>
+        <div className="mx-4 rounded-2xl bg-surface px-6 py-16 text-center sm:mx-6 lg:mx-8">
+          <p className="text-sm text-muted">Your cart is empty.</p>
           <Link
             href="/products"
-            className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-stone-900 px-5 text-sm font-semibold text-white transition-colors hover:bg-stone-700"
+            className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
           >
-            Continue shopping
+            Start shopping
           </Link>
         </div>
       ) : (
-        <div className="mt-10 grid gap-10 lg:grid-cols-[1.5fr_1fr]">
-          <div className="rounded-2xl border border-stone-200 bg-white px-6">
+        <div className="px-4 sm:px-6 lg:mx-auto lg:max-w-3xl lg:px-8">
+          <div className="divide-y divide-border rounded-2xl bg-surface">
             {lines.map((line) => (
               <CartLineItem key={line.id} line={line} />
             ))}
           </div>
 
-          <aside className="h-fit rounded-2xl border border-stone-200 bg-white p-6">
-            <h2 className="text-lg font-medium">Order summary</h2>
-            <div className="mt-4 flex items-center justify-between border-b border-stone-200 pb-4">
-              <span className="text-stone-600">Subtotal</span>
+          <div className="mt-6 rounded-2xl bg-surface p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted">Subtotal</span>
               {cart && <Price amount={cart.cost.subtotalAmount} />}
             </div>
-            <p className="mt-4 text-sm text-stone-500">
-              Taxes and shipping are calculated at checkout.
+            <p className="mt-2 text-xs text-muted">
+              Taxes and shipping calculated at checkout.
             </p>
             {cart && (
-              <div className="mt-6">
+              <div className="mt-5">
                 <CheckoutButton checkoutUrl={cart.checkoutUrl} />
               </div>
             )}
-          </aside>
+          </div>
         </div>
       )}
     </div>
