@@ -6,8 +6,8 @@
   --muted: #737373;
   --border: #ebebeb;
   --surface: #f7f7f7;
-  --accent: #5433eb;
-  --accent-hover: #4528d4;
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
 }
 
 @theme inline {

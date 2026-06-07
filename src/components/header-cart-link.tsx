@@ -11,7 +11,7 @@ export function HeaderCartLink({ itemCount }: HeaderCartLinkProps) {
   return (
     <Link
       href="/cart"
-      className="relative ml-auto hidden h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-surface sm:inline-flex sm:ml-0"
+      className="relative hidden h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-surface sm:inline-flex"
       aria-label={`Cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
     >
       <ShoppingCart className="h-6 w-6 text-foreground" strokeWidth={1.75} />
