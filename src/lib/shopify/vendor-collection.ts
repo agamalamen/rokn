@@ -1,10 +1,21 @@
 import type { Image } from "@/lib/shopify/types";
 
 const GENERIC_COLLECTION_HANDLES = new Set([
+  "accessories",
+  "ahmed-s-stuff",
   "all-products",
-  "new-arrivals",
+  "arabic-calligraphy",
+  "bags-handhelds",
+  "candles-scents",
+  "customizable-products",
   "deals-discounts",
   "gifts",
+  "home-decor",
+  "jewelry",
+  "kitchen-dining",
+  "new-arrivals",
+  "other",
+  "palestine",
   "weekly-collection",
 ]);
 

@@ -19,10 +19,21 @@ Implementation: `src/lib/shopify/vendor-collection.ts`
 
 Generic collections are identified by handle in `GENERIC_COLLECTION_HANDLES`:
 
+- `accessories`
+- `ahmed-s-stuff`
 - `all-products`
-- `new-arrivals`
+- `arabic-calligraphy`
+- `bags-handhelds`
+- `candles-scents`
+- `customizable-products`
 - `deals-discounts`
 - `gifts`
+- `home-decor`
+- `jewelry`
+- `kitchen-dining`
+- `new-arrivals`
+- `other`
+- `palestine`
 - `weekly-collection`
 
 Everything else is treated as a shop.

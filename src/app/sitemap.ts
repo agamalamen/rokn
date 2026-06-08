@@ -42,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [productHandles, collections] = await Promise.all([
     getAllProductHandles(),
-    getCollections(100),
+    getCollections(),
   ]);
 
   for (const handle of productHandles) {

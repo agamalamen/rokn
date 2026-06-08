@@ -173,8 +173,12 @@ export const getProductByHandleQuery = `
 `;
 
 export const getCollectionsQuery = `
-  query getCollections($first: Int!) {
-    collections(first: $first, sortKey: TITLE) {
+  query getCollections($first: Int!, $after: String) {
+    collections(first: $first, after: $after, sortKey: TITLE) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       edges {
         node {
           id

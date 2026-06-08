@@ -345,21 +345,36 @@ export const getProductByHandle = cache(async function getProductByHandle(
   return data.product;
 });
 
-async function fetchCollections(first: number): Promise<Collection[]> {
-  const data = await shopifyFetch<{
-    collections: { edges: { node: Collection }[] };
-  }>({
-    query: getCollectionsQuery,
-    variables: { first },
-    revalidate: CATALOG_REVALIDATE_SECONDS,
-    tags: ["collections"],
-  });
+type CollectionsPageResponse = {
+  collections: {
+    edges: { node: Collection }[];
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  };
+};
 
-  return data.collections.edges.map((edge) => edge.node);
+async function fetchAllCollections(): Promise<Collection[]> {
+  const collections: Collection[] = [];
+  let cursor: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const data: CollectionsPageResponse = await shopifyFetch({
+      query: getCollectionsQuery,
+      variables: { first: 250, after: cursor },
+      revalidate: CATALOG_REVALIDATE_SECONDS,
+      tags: ["collections"],
+    });
+
+    collections.push(...data.collections.edges.map((edge) => edge.node));
+    hasNextPage = data.collections.pageInfo.hasNextPage;
+    cursor = data.collections.pageInfo.endCursor;
+  }
+
+  return collections;
 }
 
 const getCachedCollectionsCatalog = unstable_cache(
-  () => fetchCollections(100),
+  fetchAllCollections,
   ["shopify-collections-catalog"],
   {
     revalidate: CATALOG_REVALIDATE_SECONDS,
@@ -393,9 +408,9 @@ export async function getShopHandleBySlug(shopSlug: string): Promise<string | nu
   return slugMap[normalizedSlug] ?? null;
 }
 
-export async function getCollections(first = 12): Promise<Collection[]> {
+export async function getCollections(first?: number): Promise<Collection[]> {
   const collections = await getCachedCollectionsCatalog();
-  return collections.slice(0, first);
+  return first === undefined ? collections : collections.slice(0, first);
 }
 
 export const getCollectionMetaByHandle = cache(async function getCollectionMetaByHandle(

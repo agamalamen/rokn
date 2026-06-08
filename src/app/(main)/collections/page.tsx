@@ -3,14 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getCollections } from "@/lib/shopify";
-import { getShopUrl } from "@/lib/shopify/vendor-collection";
+import { getShopUrl, isShopCollection } from "@/lib/shopify/vendor-collection";
 
 export const metadata: Metadata = {
   title: "Collections",
 };
 
 export default async function CollectionsPage() {
-  const collections = isShopifyConfigured() ? await getCollections() : [];
+  const allCollections = isShopifyConfigured() ? await getCollections() : [];
+  const collections = allCollections.filter(
+    (collection) => !isShopCollection(collection),
+  );
 
   return (
     <div className="py-6">
