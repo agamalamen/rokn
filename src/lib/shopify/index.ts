@@ -1,7 +1,10 @@
+import { unstable_cache } from "next/cache";
+import { cache } from "react";
 import {
   SHOPIFY_API_VERSION,
   SHOPIFY_STORE_DOMAIN,
   SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+  CATALOG_REVALIDATE_SECONDS,
   PRODUCTS_PAGE_SIZE,
   isShopifyConfigured,
 } from "@/lib/constants";
@@ -134,6 +137,10 @@ export async function getProductsPage({
 export async function getTotalProductPages(
   pageSize = PRODUCTS_PAGE_SIZE,
 ): Promise<number> {
+  return getCachedTotalProductPages(pageSize);
+}
+
+async function countTotalProductPages(pageSize: number): Promise<number> {
   let totalProducts = 0;
   let cursor: string | null = null;
   let hasNextPage = true;
@@ -162,6 +169,15 @@ export async function getTotalProductPages(
 
   return Math.max(1, Math.ceil(totalProducts / pageSize));
 }
+
+const getCachedTotalProductPages = unstable_cache(
+  countTotalProductPages,
+  ["shopify-total-product-pages"],
+  {
+    revalidate: CATALOG_REVALIDATE_SECONDS,
+    tags: ["products"],
+  },
+);
 
 export async function searchProducts(
   query: string,
@@ -195,7 +211,7 @@ function handleCacheTag(prefix: string, handle: string): string {
   return `${prefix}-${encodeURIComponent(normalizeHandle(handle))}`;
 }
 
-export async function getProductByHandle(
+export const getProductByHandle = cache(async function getProductByHandle(
   handle: string,
 ): Promise<Product | null> {
   const normalizedHandle = normalizeHandle(handle);
@@ -207,9 +223,9 @@ export async function getProductByHandle(
   });
 
   return data.product;
-}
+});
 
-export async function getCollections(first = 12): Promise<Collection[]> {
+async function fetchCollections(first: number): Promise<Collection[]> {
   const data = await shopifyFetch<{
     collections: { edges: { node: Collection }[] };
   }>({
@@ -221,7 +237,21 @@ export async function getCollections(first = 12): Promise<Collection[]> {
   return data.collections.edges.map((edge) => edge.node);
 }
 
-export async function getCollectionByHandle(
+const getCachedCollectionsCatalog = unstable_cache(
+  () => fetchCollections(100),
+  ["shopify-collections-catalog"],
+  {
+    revalidate: CATALOG_REVALIDATE_SECONDS,
+    tags: ["collections"],
+  },
+);
+
+export async function getCollections(first = 12): Promise<Collection[]> {
+  const collections = await getCachedCollectionsCatalog();
+  return collections.slice(0, first);
+}
+
+export const getCollectionByHandle = cache(async function getCollectionByHandle(
   handle: string,
   first = 24,
 ): Promise<(Collection & { products: ProductCard[] }) | null> {
@@ -243,11 +273,13 @@ export async function getCollectionByHandle(
     ...data.collection,
     products: data.collection.products.edges.map((edge) => edge.node),
   };
-}
+});
 
-export async function getShopCollectionBySlug(shopSlug: string) {
+export const getShopCollectionBySlug = cache(async function getShopCollectionBySlug(
+  shopSlug: string,
+) {
   const normalizedSlug = slugifyShopName(normalizeHandle(shopSlug));
-  const collections = await getCollections(100);
+  const collections = await getCachedCollectionsCatalog();
   const match = collections.find(
     (collection) => slugifyShopName(collection.title) === normalizedSlug,
   );
@@ -257,7 +289,7 @@ export async function getShopCollectionBySlug(shopSlug: string) {
   }
 
   return getCollectionByHandle(match.handle);
-}
+});
 
 export async function createCart(
   lines?: { merchandiseId: string; quantity: number }[],

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import {
   addToCart,
   createCart,
@@ -34,10 +35,15 @@ async function getOrCreateCartId(): Promise<string> {
   return cart.id;
 }
 
+function revalidateCartSurfaces() {
+  revalidatePath("/cart");
+  revalidatePath("/", "layout");
+}
+
 export async function addItemToCart(variantId: string, quantity = 1) {
   const cartId = await getOrCreateCartId();
   await addToCart(cartId, [{ merchandiseId: variantId, quantity }]);
-  revalidatePath("/", "layout");
+  revalidateCartSurfaces();
 }
 
 export async function updateItemQuantity(lineId: string, quantity: number) {
@@ -54,7 +60,7 @@ export async function updateItemQuantity(lineId: string, quantity: number) {
     await updateCartLine(cartId, [{ id: lineId, quantity }]);
   }
 
-  revalidatePath("/", "layout");
+  revalidateCartSurfaces();
 }
 
 export async function removeItemFromCart(lineId: string) {
@@ -66,10 +72,10 @@ export async function removeItemFromCart(lineId: string) {
   }
 
   await removeFromCart(cartId, [lineId]);
-  revalidatePath("/", "layout");
+  revalidateCartSurfaces();
 }
 
-export async function fetchCart() {
+export const fetchCart = cache(async function fetchCart() {
   const cookieStore = await cookies();
   const cartId = cookieStore.get(CART_COOKIE_NAME)?.value;
 
@@ -78,4 +84,4 @@ export async function fetchCart() {
   }
 
   return getCart(cartId);
-}
+});
