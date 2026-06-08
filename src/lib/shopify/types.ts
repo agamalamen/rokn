@@ -46,6 +46,18 @@ export type ProductCard = Pick<
   "id" | "handle" | "title" | "productType" | "featuredImage" | "priceRange"
 >;
 
+export type PageInfo = {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string | null;
+  endCursor: string | null;
+};
+
+export type ProductsPageResult = {
+  products: ProductCard[];
+  pageInfo: PageInfo;
+};
+
 export type Collection = {
   id: string;
   handle: string;

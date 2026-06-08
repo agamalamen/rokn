@@ -33,11 +33,12 @@ export default async function ProductLayout({
   const collections = product.collections.edges.map((edge) => edge.node);
   const shopCollection = findVendorCollection(vendor, collections);
   const shopSlug = shopCollection ? getShopSlug(shopCollection) : undefined;
+  const shopName = shopCollection?.title ?? vendor;
 
   return (
     <>
       <ProductVendorHeader
-        vendor={vendor}
+        vendor={shopName}
         action={
           shopSlug
             ? { label: "View shop", href: `/${shopSlug}` }

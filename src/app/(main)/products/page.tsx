@@ -1,14 +1,36 @@
 import type { Metadata } from "next";
 import { ProductGrid } from "@/components/product-grid";
+import { ProductPagination } from "@/components/product-pagination";
 import { isShopifyConfigured } from "@/lib/constants";
-import { getProducts } from "@/lib/shopify";
+import { getProductsPage, getTotalProductPages } from "@/lib/shopify";
 
 export const metadata: Metadata = {
   title: "Shop",
 };
 
-export default async function ProductsPage() {
-  const products = isShopifyConfigured() ? await getProducts(24) : [];
+type ProductsPageProps = {
+  searchParams: Promise<{ after?: string; before?: string; page?: string }>;
+};
+
+export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+  const { after, before, page: pageParam } = await searchParams;
+  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
+
+  const emptyPageInfo = {
+    hasNextPage: false,
+    hasPreviousPage: false,
+    startCursor: null,
+    endCursor: null,
+  };
+
+  const [{ products, pageInfo }, totalPages] = isShopifyConfigured()
+    ? await Promise.all([
+        getProductsPage(
+          before ? { before } : { after: after ?? null },
+        ),
+        getTotalProductPages(),
+      ])
+    : [{ products: [], pageInfo: emptyPageInfo }, 1];
 
   return (
     <div className="py-6">
@@ -19,6 +41,11 @@ export default async function ProductsPage() {
         </p>
       </div>
       <ProductGrid products={products} />
+      <ProductPagination
+        pageInfo={pageInfo}
+        page={Math.min(page, totalPages)}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

@@ -25,8 +25,14 @@ export const productCardFragment = `
 
 export const getProductsQuery = `
   ${productCardFragment}
-  query getProducts($first: Int!) {
-    products(first: $first, sortKey: BEST_SELLING) {
+  query getProducts($first: Int, $after: String, $last: Int, $before: String) {
+    products(first: $first, after: $after, last: $last, before: $before, sortKey: BEST_SELLING) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
       edges {
         node {
           ...ProductCard

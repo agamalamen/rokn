@@ -2,6 +2,7 @@ import {
   SHOPIFY_API_VERSION,
   SHOPIFY_STORE_DOMAIN,
   SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+  PRODUCTS_PAGE_SIZE,
   isShopifyConfigured,
 } from "@/lib/constants";
 import {
@@ -16,7 +17,7 @@ import {
   searchProductsQuery,
   updateCartLineMutation,
 } from "@/lib/shopify/queries";
-import type { Cart, Collection, Product, ProductCard } from "@/lib/shopify/types";
+import type { Cart, Collection, PageInfo, Product, ProductCard, ProductsPageResult } from "@/lib/shopify/types";
 import { slugifyShopName } from "@/lib/shopify/vendor-collection";
 
 type ShopifyFetchOptions = {
@@ -91,11 +92,75 @@ export async function getProducts(first = 12): Promise<ProductCard[]> {
     products: { edges: { node: ProductCard }[] };
   }>({
     query: getProductsQuery,
-    variables: { first },
+    variables: { first, after: null, last: null, before: null },
     tags: ["products"],
   });
 
   return data.products.edges.map((edge) => edge.node);
+}
+
+type GetProductsPageOptions = {
+  first?: number;
+  after?: string | null;
+  before?: string | null;
+};
+
+export async function getProductsPage({
+  first = PRODUCTS_PAGE_SIZE,
+  after = null,
+  before = null,
+}: GetProductsPageOptions = {}): Promise<ProductsPageResult> {
+  const variables = before
+    ? { first: null, after: null, last: first, before }
+    : { first, after, last: null, before: null };
+
+  const data = await shopifyFetch<{
+    products: {
+      edges: { node: ProductCard }[];
+      pageInfo: PageInfo;
+    };
+  }>({
+    query: getProductsQuery,
+    variables,
+    tags: ["products"],
+  });
+
+  return {
+    products: data.products.edges.map((edge) => edge.node),
+    pageInfo: data.products.pageInfo,
+  };
+}
+
+export async function getTotalProductPages(
+  pageSize = PRODUCTS_PAGE_SIZE,
+): Promise<number> {
+  let totalProducts = 0;
+  let cursor: string | null = null;
+  let hasNextPage = true;
+
+  type ProductsCountResponse = {
+    products: {
+      edges: { node: { id: string } }[];
+      pageInfo: {
+        hasNextPage: boolean;
+        endCursor: string | null;
+      };
+    };
+  };
+
+  while (hasNextPage) {
+    const data: ProductsCountResponse = await shopifyFetch<ProductsCountResponse>({
+      query: getProductsQuery,
+      variables: { first: 250, after: cursor, last: null, before: null },
+      tags: ["products"],
+    });
+
+    totalProducts += data.products.edges.length;
+    hasNextPage = data.products.pageInfo.hasNextPage;
+    cursor = data.products.pageInfo.endCursor;
+  }
+
+  return Math.max(1, Math.ceil(totalProducts / pageSize));
 }
 
 export async function searchProducts(

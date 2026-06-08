@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { AddToCartButton } from "@/components/add-to-cart-button";
-import { Price } from "@/components/price";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
+import { ProductPurchaseOptions } from "@/components/product-purchase-options";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getProductByHandle } from "@/lib/shopify";
 import type { Image } from "@/lib/shopify/types";
@@ -45,7 +44,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const defaultVariant = product.variants.edges[0]?.node;
+  const variants = product.variants.edges.map(({ node }) => node);
   const images: Image[] = product.images.edges.map(({ node }) => node);
   const carouselImages =
     images.length > 0
@@ -63,36 +62,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
             {product.title}
           </h1>
-          <div className="mt-2">
-            <Price amount={product.priceRange.minVariantPrice} className="text-base" />
-          </div>
         </div>
+
+        {variants.length > 0 && (
+          <ProductPurchaseOptions variants={variants} />
+        )}
 
         {product.description && (
           <div
             className="prose prose-sm max-w-none text-muted"
             dangerouslySetInnerHTML={{ __html: product.description }}
           />
-        )}
-
-        {defaultVariant && (
-          <AddToCartButton
-            variantId={defaultVariant.id}
-            availableForSale={defaultVariant.availableForSale}
-          />
-        )}
-
-        {product.variants.edges.length > 1 && (
-          <div className="rounded-2xl bg-surface p-4">
-            <p className="text-sm font-semibold text-foreground">Variants</p>
-            <ul className="mt-2 space-y-1.5 text-sm text-muted">
-              {product.variants.edges.map(({ node }) => (
-                <li key={node.id}>
-                  {node.title} — {node.availableForSale ? "In stock" : "Sold out"}
-                </li>
-              ))}
-            </ul>
-          </div>
         )}
       </div>
     </div>
