@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Geist, Geist_Mono } from "next/font/google";
-import { fetchCart } from "@/actions/cart";
+import { CartCountLoader } from "@/components/cart-count-loader";
 import { CartCountProvider } from "@/components/cart-count-provider";
-import { MobileNav } from "@/components/mobile-nav";
 import { SetupBanner } from "@/components/setup-banner";
 import "./globals.css";
+
+const MobileNav = dynamic(
+  () => import("@/components/mobile-nav").then((mod) => mod.MobileNav),
+  { ssr: true },
+);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,20 +29,22 @@ export const metadata: Metadata = {
   description: "Modern headless ecommerce powered by Shopify and Next.js",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cart = await fetchCart();
-
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="" />
+      </head>
       <body className="flex min-h-full flex-col bg-white text-foreground">
-        <CartCountProvider initialCount={cart?.totalQuantity ?? 0}>
+        <CartCountProvider initialCount={0}>
+          <CartCountLoader />
           <SetupBanner />
           {children}
           <MobileNav />

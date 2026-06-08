@@ -197,6 +197,25 @@ export async function getProductsPage({
   };
 }
 
+async function fetchAllProductHandles(): Promise<string[]> {
+  const handles: string[] = [];
+  let cursor: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const { products, pageInfo } = await getProductsPage({
+      first: 250,
+      after: cursor,
+    });
+
+    handles.push(...products.map((product) => product.handle));
+    hasNextPage = pageInfo.hasNextPage;
+    cursor = pageInfo.endCursor;
+  }
+
+  return handles;
+}
+
 export async function getTotalProductPages(
   pageSize = PRODUCTS_PAGE_SIZE,
 ): Promise<number> {
@@ -237,6 +256,15 @@ async function countTotalProductPages(pageSize: number): Promise<number> {
 const getCachedTotalProductPages = unstable_cache(
   countTotalProductPages,
   ["shopify-total-product-pages"],
+  {
+    revalidate: CATALOG_REVALIDATE_SECONDS,
+    tags: ["products"],
+  },
+);
+
+export const getAllProductHandles = unstable_cache(
+  fetchAllProductHandles,
+  ["shopify-all-product-handles"],
   {
     revalidate: CATALOG_REVALIDATE_SECONDS,
     tags: ["products"],

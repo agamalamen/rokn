@@ -37,6 +37,7 @@ export default async function ProductLayout({
     <>
       <ProductVendorHeader
         vendor={shopName}
+        image={shopCollection?.image}
         action={
           shopSlug
             ? { label: "View shop", href: `/${shopSlug}` }

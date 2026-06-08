@@ -29,14 +29,15 @@ export function CollectionShelf({
             href={getShopUrl(collection)}
             className="group w-36 shrink-0 sm:w-44"
           >
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-surface">
+            <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-surface">
               {collection.image ? (
                 <Image
                   src={collection.image.url}
                   alt={collection.image.altText ?? collection.title}
-                  fill
+                  width={352}
+                  height={440}
                   sizes="176px"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="h-full w-full object-cover motion-safe:transform-gpu motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-xs text-muted">

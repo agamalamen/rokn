@@ -92,3 +92,8 @@ export const fetchCart = cache(async function fetchCart() {
 
   return getCart(cartId);
 });
+
+export async function getCartCount(): Promise<number> {
+  const cart = await fetchCart();
+  return cart?.totalQuantity ?? 0;
+}

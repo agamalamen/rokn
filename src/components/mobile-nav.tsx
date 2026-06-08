@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useCartCount } from "@/components/cart-count-provider";
 
 const navItems: { href: string; label: string; icon: LucideIcon }[] = [
@@ -35,16 +34,6 @@ function isNavItemActive(href: string, pathname: string) {
   }
 
   return pathname.startsWith(href);
-}
-
-function useActiveNavItem(href: string, pathname: string) {
-  const [active, setActive] = useState(false);
-
-  useEffect(() => {
-    setActive(isNavItemActive(href, pathname));
-  }, [href, pathname]);
-
-  return active;
 }
 
 export function MobileNav() {
@@ -76,7 +65,7 @@ function MobileNavItem({
   pathname: string;
   itemCount: number;
 }) {
-  const active = useActiveNavItem(item.href, pathname);
+  const active = isNavItemActive(item.href, pathname);
   const Icon = item.icon;
   const isCart = item.href === "/cart";
 
@@ -88,7 +77,11 @@ function MobileNavItem({
       }`}
       aria-current={active ? "page" : undefined}
       aria-label={
-        isCart && itemCount > 0 ? `Cart, ${itemCount} items` : item.label
+        isCart && itemCount > 0
+          ? `Cart, ${itemCount} items`
+          : item.href === "/account"
+            ? "Sign in to your account"
+            : item.label
       }
       prefetch
     >

@@ -45,7 +45,7 @@ export type Product = {
     edges: { node: ProductVariant }[];
   };
   collections: {
-    edges: { node: Pick<Collection, "handle" | "title"> }[];
+    edges: { node: Pick<Collection, "handle" | "title" | "image"> }[];
   };
 };
 

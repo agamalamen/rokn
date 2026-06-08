@@ -1,3 +1,5 @@
+import type { Image } from "@/lib/shopify/types";
+
 const GENERIC_COLLECTION_HANDLES = new Set([
   "all-products",
   "new-arrivals",
@@ -9,6 +11,7 @@ const GENERIC_COLLECTION_HANDLES = new Set([
 export type VendorCollection = {
   handle: string;
   title: string;
+  image?: Image | null;
 };
 
 export function slugifyShopName(name: string) {

@@ -19,6 +19,7 @@ export default async function HomePage() {
         products={featured}
         href="/products"
         singleLineTitle
+        priorityCount={1}
       />
 
       {trending.length > 0 && (
@@ -35,6 +36,7 @@ export default async function HomePage() {
         <ProductGrid
           products={products.slice(0, 4)}
           singleLineTitle
+          priorityCount={0}
           emptyMessage={
             isShopifyConfigured()
               ? "No products found in your Shopify store yet."

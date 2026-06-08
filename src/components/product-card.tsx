@@ -25,10 +25,10 @@ export function ProductCard({
     <Link
       href={`/products/${product.handle}`}
       className={`group flex flex-col ${isShelf ? "w-36 shrink-0 sm:w-44" : ""}`}
-      prefetch
+      prefetch={priority}
     >
       <div
-        className={`relative overflow-hidden bg-surface ${
+        className={`overflow-hidden bg-surface ${
           isShelf ? "aspect-square rounded-2xl" : "aspect-square rounded-2xl"
         }`}
       >
@@ -36,13 +36,18 @@ export function ProductCard({
           <Image
             src={shopifyImageUrl(image.url, imageWidth)}
             alt={image.altText ?? product.title}
-            fill
+            width={imageWidth}
+            height={imageWidth}
             priority={priority}
             sizes={isShelf ? "176px" : "(max-width: 768px) 50vw, 25vw"}
-            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            className={`h-full w-full object-cover ${
+              priority
+                ? ""
+                : "motion-safe:transform-gpu motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.03]"
+            }`}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-xs text-muted">
+          <div className="flex aspect-square items-center justify-center text-xs text-muted">
             No image
           </div>
         )}

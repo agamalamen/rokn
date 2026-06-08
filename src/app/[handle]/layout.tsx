@@ -27,6 +27,7 @@ export default async function ShopLayout({
     <>
       <ProductVendorHeader
         vendor={collection.title}
+        image={collection.image}
         action={{ label: "Message seller", href: "/about" }}
       />
       <main className="flex-1 pb-nav">{children}</main>

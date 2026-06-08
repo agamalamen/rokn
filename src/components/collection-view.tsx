@@ -26,7 +26,7 @@ export function CollectionView({
 }: CollectionViewProps) {
   return (
     <div className="py-6">
-      {collection.image && (
+      {collection.image && !showFilterPills && (
         <div className="relative mx-4 mb-6 aspect-[16/9] overflow-hidden rounded-2xl bg-surface sm:mx-6 lg:mx-8">
           <Image
             src={shopifyImageUrl(collection.image.url, 1200)}

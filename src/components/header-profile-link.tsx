@@ -6,7 +6,7 @@ export function HeaderProfileLink() {
     <Link
       href="/account"
       className="hidden h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-surface sm:inline-flex"
-      aria-label="Account"
+      aria-label="Sign in to your account"
     >
       <User className="h-6 w-6 text-foreground" strokeWidth={1.75} />
     </Link>

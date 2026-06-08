@@ -89,6 +89,12 @@ export const getProductHeaderByHandleQuery = `
           node {
             handle
             title
+            image {
+              url
+              altText
+              width
+              height
+            }
           }
         }
       }
@@ -153,6 +159,12 @@ export const getProductByHandleQuery = `
           node {
             handle
             title
+            image {
+              url
+              altText
+              width
+              height
+            }
           }
         }
       }

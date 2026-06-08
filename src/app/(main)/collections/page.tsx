@@ -31,14 +31,15 @@ export default async function CollectionsPage() {
               href={getShopUrl(collection)}
               className="group"
             >
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-surface">
+              <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-surface">
                 {collection.image ? (
                   <Image
                     src={collection.image.url}
                     alt={collection.image.altText ?? collection.title}
-                    fill
+                    width={400}
+                    height={500}
                     sizes="(max-width: 768px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    className="h-full w-full object-cover motion-safe:transform-gpu motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.03]"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-xs text-muted">

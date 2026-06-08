@@ -7,6 +7,7 @@ type ProductShelfProps = {
   products: ProductCardType[];
   href?: string;
   singleLineTitle?: boolean;
+  priorityCount?: number;
 };
 
 export function ProductShelf({
@@ -14,6 +15,7 @@ export function ProductShelf({
   products,
   href,
   singleLineTitle = false,
+  priorityCount = 0,
 }: ProductShelfProps) {
   if (products.length === 0) {
     return null;
@@ -29,7 +31,7 @@ export function ProductShelf({
             product={product}
             variant="shelf"
             singleLineTitle={singleLineTitle}
-            priority={index < 2}
+            priority={index < priorityCount}
           />
         ))}
       </div>
