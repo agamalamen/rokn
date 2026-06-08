@@ -77,6 +77,15 @@ export type CollectionPageResult = {
   pageInfo: PageInfo;
 };
 
+export type CategoryPreviewProduct = {
+  id: string;
+  featuredImage: Image | null;
+};
+
+export type CategoryBrowseItem = Collection & {
+  previewProducts: CategoryPreviewProduct[];
+};
+
 export type SearchPageResult = {
   products: ProductCard[];
   pageInfo: PageInfo;

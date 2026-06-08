@@ -197,6 +197,44 @@ export const getCollectionsQuery = `
   }
 `;
 
+export const getCategoryBrowseCollectionsQuery = `
+  query getCategoryBrowseCollections($first: Int!, $after: String) {
+    collections(first: $first, after: $after, sortKey: TITLE) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          id
+          handle
+          title
+          description
+          image {
+            url
+            altText
+            width
+            height
+          }
+          products(first: 2, sortKey: BEST_SELLING) {
+            edges {
+              node {
+                id
+                featuredImage {
+                  url
+                  altText
+                  width
+                  height
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const getCollectionMetaByHandleQuery = `
   query getCollectionMetaByHandle($handle: String!) {
     collection(handle: $handle) {

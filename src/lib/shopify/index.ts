@@ -15,6 +15,7 @@ import {
   addToCartMutation,
   createCartMutation,
   getCartQuery,
+  getCategoryBrowseCollectionsQuery,
   getCollectionByHandleQuery,
   getCollectionMetaByHandleQuery,
   getCollectionsQuery,
@@ -27,6 +28,8 @@ import {
 } from "@/lib/shopify/queries";
 import type {
   Cart,
+  CategoryBrowseItem,
+  CategoryPreviewProduct,
   Collection,
   CollectionPageResult,
   PageInfo,
@@ -36,7 +39,7 @@ import type {
   ProductsPageResult,
   SearchPageResult,
 } from "@/lib/shopify/types";
-import { slugifyShopName } from "@/lib/shopify/vendor-collection";
+import { isShopCollection, slugifyShopName } from "@/lib/shopify/vendor-collection";
 
 type ShopifyFetchOptions = {
   query: string;
@@ -411,6 +414,58 @@ export async function getShopHandleBySlug(shopSlug: string): Promise<string | nu
 export async function getCollections(first?: number): Promise<Collection[]> {
   const collections = await getCachedCollectionsCatalog();
   return first === undefined ? collections : collections.slice(0, first);
+}
+
+type CategoryBrowseCollectionNode = Collection & {
+  products: {
+    edges: { node: CategoryPreviewProduct }[];
+  };
+};
+
+type CategoryBrowseCollectionsResponse = {
+  collections: {
+    edges: { node: CategoryBrowseCollectionNode }[];
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  };
+};
+
+async function fetchCategoryBrowseCollections(): Promise<CategoryBrowseItem[]> {
+  const collections: CategoryBrowseCollectionNode[] = [];
+  let cursor: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const data: CategoryBrowseCollectionsResponse = await shopifyFetch({
+      query: getCategoryBrowseCollectionsQuery,
+      variables: { first: 250, after: cursor },
+      revalidate: CATALOG_REVALIDATE_SECONDS,
+      tags: ["collections"],
+    });
+
+    collections.push(...data.collections.edges.map((edge) => edge.node));
+    hasNextPage = data.collections.pageInfo.hasNextPage;
+    cursor = data.collections.pageInfo.endCursor;
+  }
+
+  return collections
+    .filter((collection) => !isShopCollection(collection))
+    .map(({ products, ...collection }) => ({
+      ...collection,
+      previewProducts: products.edges.map((edge) => edge.node),
+    }));
+}
+
+const getCachedCategoryBrowseCollections = unstable_cache(
+  fetchCategoryBrowseCollections,
+  ["shopify-category-browse-collections"],
+  {
+    revalidate: CATALOG_REVALIDATE_SECONDS,
+    tags: ["collections"],
+  },
+);
+
+export async function getCategoryBrowseCollections(): Promise<CategoryBrowseItem[]> {
+  return getCachedCategoryBrowseCollections();
 }
 
 export const getCollectionMetaByHandle = cache(async function getCollectionMetaByHandle(
