@@ -30,7 +30,7 @@ export default async function ShopLayout({
         image={collection.image}
         action={{ label: "Message seller", href: "/about" }}
       />
-      <main className="flex-1 pb-nav">{children}</main>
+      <main className="flex-1">{children}</main>
     </>
   );
 }

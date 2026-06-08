@@ -55,7 +55,7 @@ function FooterSection({
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-border bg-surface pb-nav sm:pb-8">
+    <footer className="mt-auto border-t border-border bg-surface pb-8">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8">
           <FooterSection title="Information" links={informationLinks} />

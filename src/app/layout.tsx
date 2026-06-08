@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import dynamic from "next/dynamic";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -30,6 +30,10 @@ export const metadata: Metadata = {
   description: "Modern headless ecommerce powered by Shopify and Next.js",
 };
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,17 +42,24 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <head>
         <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="" />
       </head>
-      <body className="flex min-h-full flex-col bg-white text-foreground">
+      <body className="bg-white text-foreground">
         <CartCountProvider initialCount={0}>
-          <CartCountLoader />
-          <SetupBanner />
-          {children}
-          <MobileNav />
+          <div className="max-sm:flex max-sm:h-dvh max-sm:flex-col max-sm:overflow-hidden">
+            <div
+              id="app-scroll"
+              className="max-sm:min-h-0 max-sm:flex-1 max-sm:overflow-y-auto"
+            >
+              <CartCountLoader />
+              <SetupBanner />
+              {children}
+            </div>
+            <MobileNav />
+          </div>
         </CartCountProvider>
         <SpeedInsights />
       </body>

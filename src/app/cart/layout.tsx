@@ -3,5 +3,5 @@ export default function CartLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className="flex-1 pb-nav">{children}</main>;
+  return <main className="flex-1">{children}</main>;
 }

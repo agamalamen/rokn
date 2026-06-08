@@ -44,7 +44,7 @@ export default async function ProductLayout({
             : undefined
         }
       />
-      <main className="flex-1 pb-nav">{children}</main>
+      <main className="flex-1">{children}</main>
     </>
   );
 }

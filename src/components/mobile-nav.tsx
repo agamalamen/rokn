@@ -41,7 +41,7 @@ export function MobileNav() {
   const { count: itemCount } = useCartCount();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 overflow-hidden rounded-t-3xl border-t border-border bg-white/95 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] backdrop-blur-md sm:hidden">
+    <nav className="z-50 shrink-0 overflow-hidden rounded-t-3xl border-t border-border bg-white/95 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] backdrop-blur-md sm:hidden">
       <div className="flex min-h-[4.75rem] items-stretch justify-around pb-[env(safe-area-inset-bottom,0px)] pt-1.5">
         {navItems.map((item) => (
           <MobileNavItem
