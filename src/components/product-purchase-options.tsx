@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { addItemToCart } from "@/actions/cart";
+import { useCartCount } from "@/components/cart-count-provider";
 import { Price } from "@/components/price";
 import type { Money, ProductVariant } from "@/lib/shopify/types";
 
@@ -53,6 +55,8 @@ function isOptionValueAvailable(
 export function ProductPurchaseOptions({
   variants,
 }: ProductPurchaseOptionsProps) {
+  const router = useRouter();
+  const { setCount } = useCartCount();
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(
     () => getInitialOptions(variants),
   );
@@ -100,7 +104,9 @@ export function ProductPurchaseOptions({
 
   function handleAddToCart() {
     startTransition(async () => {
-      await addItemToCart(selectedVariant.id, quantity);
+      const totalQuantity = await addItemToCart(selectedVariant.id, quantity);
+      setCount(totalQuantity);
+      router.refresh();
     });
   }
 

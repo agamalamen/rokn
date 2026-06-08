@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { shopifyImageUrl } from "@/lib/shopify/image";
 import type { Image as ShopifyImage } from "@/lib/shopify/types";
 
 type ProductImageCarouselProps = {
@@ -29,7 +30,7 @@ export function ProductImageCarousel({
       <div className="mt-4 flex justify-center px-4">
         <div className="relative aspect-[4/5] w-[82vw] max-w-[320px] overflow-hidden rounded-2xl bg-surface">
           <Image
-            src={image.url}
+            src={shopifyImageUrl(image.url, 640)}
             alt={image.altText ?? title}
             fill
             priority
@@ -50,7 +51,7 @@ export function ProductImageCarousel({
             className="relative aspect-[4/5] w-[82vw] max-w-[320px] shrink-0 snap-center overflow-hidden rounded-2xl bg-surface"
           >
             <Image
-              src={image.url}
+              src={shopifyImageUrl(image.url, 640)}
               alt={image.altText ?? `${title} image ${index + 1}`}
               fill
               priority={index === 0}

@@ -2,14 +2,17 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { CollectionView } from "@/components/collection-view";
 import { isShopifyConfigured } from "@/lib/constants";
-import { getCollectionByHandle } from "@/lib/shopify";
+import {
+  getCollectionMetaByHandle,
+  getCollectionPage,
+  getTotalCollectionPages,
+} from "@/lib/shopify";
 import { getShopUrl, isShopCollection } from "@/lib/shopify/vendor-collection";
 
 type CollectionPageProps = {
   params: Promise<{ handle: string }>;
+  searchParams: Promise<{ after?: string; before?: string; page?: string }>;
 };
-
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -19,7 +22,7 @@ export async function generateMetadata({
   }
 
   const { handle } = await params;
-  const collection = await getCollectionByHandle(handle);
+  const collection = await getCollectionMetaByHandle(handle);
 
   if (!collection) {
     return { title: "Collection not found" };
@@ -31,21 +34,49 @@ export async function generateMetadata({
   };
 }
 
-export default async function CollectionPage({ params }: CollectionPageProps) {
+export default async function CollectionPage({
+  params,
+  searchParams,
+}: CollectionPageProps) {
   if (!isShopifyConfigured()) {
     notFound();
   }
 
   const { handle } = await params;
-  const collection = await getCollectionByHandle(handle);
+  const { after, before, page: pageParam } = await searchParams;
+  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
 
-  if (!collection) {
+  const collectionMeta = await getCollectionMetaByHandle(handle);
+
+  if (!collectionMeta) {
     notFound();
   }
 
-  if (isShopCollection(collection)) {
-    redirect(getShopUrl(collection));
+  if (isShopCollection(collectionMeta)) {
+    redirect(getShopUrl(collectionMeta));
   }
 
-  return <CollectionView collection={collection} />;
+  const [collectionPage, totalPages] = await Promise.all([
+    getCollectionPage(handle, before ? { before } : { after: after ?? null }),
+    getTotalCollectionPages(handle),
+  ]);
+
+  if (!collectionPage) {
+    notFound();
+  }
+
+  return (
+    <CollectionView
+      collection={{
+        ...collectionPage.collection,
+        products: collectionPage.products,
+      }}
+      pagination={{
+        basePath: `/collections/${handle}`,
+        pageInfo: collectionPage.pageInfo,
+        page: Math.min(page, totalPages),
+        totalPages,
+      }}
+    />
+  );
 }

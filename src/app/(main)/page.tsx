@@ -4,6 +4,8 @@ import { SectionHeader } from "@/components/section-header";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getProducts } from "@/lib/shopify";
 
+export const revalidate = 300;
+
 export default async function HomePage() {
   const products = isShopifyConfigured() ? await getProducts(12) : [];
 

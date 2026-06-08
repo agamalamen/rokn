@@ -6,6 +6,7 @@ type ProductGridProps = {
   emptyMessage?: string;
   singleLineTitle?: boolean;
   cardVariant?: "grid" | "shelf";
+  priorityCount?: number;
 };
 
 export function ProductGrid({
@@ -13,6 +14,7 @@ export function ProductGrid({
   emptyMessage = "No products found.",
   singleLineTitle = false,
   cardVariant = "grid",
+  priorityCount = 4,
 }: ProductGridProps) {
   if (products.length === 0) {
     return (
@@ -32,12 +34,13 @@ export function ProductGrid({
           : "grid grid-cols-2 gap-x-3 gap-y-6 px-4 sm:grid-cols-3 sm:gap-x-4 sm:px-6 lg:grid-cols-4 lg:px-8"
       }
     >
-      {products.map((product) => (
+      {products.map((product, index) => (
         <ProductCard
           key={product.id}
           product={product}
           variant={cardVariant}
           singleLineTitle={singleLineTitle}
+          priority={index < priorityCount}
         />
       ))}
     </div>

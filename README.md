@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Project docs
+
+- [Shops vs collections](./docs/shops-and-collections.md) — URL rules, redirects, and SEO for vendor shops vs generic collections
+
 ## Getting Started
 
 First, run the development server:

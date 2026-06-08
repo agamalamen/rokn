@@ -2,17 +2,17 @@
 
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { useCartCount } from "@/components/cart-count-provider";
 
-type HeaderCartLinkProps = {
-  itemCount: number;
-};
+export function HeaderCartLink() {
+  const { count: itemCount } = useCartCount();
 
-export function HeaderCartLink({ itemCount }: HeaderCartLinkProps) {
   return (
     <Link
       href="/cart"
       className="relative hidden h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-surface sm:inline-flex"
       aria-label={`Cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
+      prefetch
     >
       <ShoppingCart className="h-6 w-6 text-foreground" strokeWidth={1.75} />
       {itemCount > 0 && (

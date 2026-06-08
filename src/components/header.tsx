@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { fetchCart } from "@/actions/cart";
 import { HeaderCartLink } from "@/components/header-cart-link";
 import { HeaderProfileLink } from "@/components/header-profile-link";
 import { HeaderSearch } from "@/components/header-search";
@@ -9,10 +8,7 @@ const navLinks = [
   { href: "/collections", label: "Collections" },
 ];
 
-export async function Header() {
-  const cart = await fetchCart();
-  const itemCount = cart?.totalQuantity ?? 0;
-
+export function Header() {
   return (
     <header className="bg-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:px-8">
@@ -20,6 +16,7 @@ export async function Header() {
           <Link
             href="/"
             className="text-[1.75rem] font-extrabold tracking-[-0.04em] text-accent sm:text-4xl"
+            prefetch
           >
             Rokn
           </Link>
@@ -30,6 +27,7 @@ export async function Header() {
                 key={link.href}
                 href={link.href}
                 className="text-sm font-medium text-muted transition-colors hover:text-foreground"
+                prefetch
               >
                 {link.label}
               </Link>
@@ -37,7 +35,7 @@ export async function Header() {
           </nav>
 
           <div className="absolute right-0 flex items-center gap-2 sm:gap-4">
-            <HeaderCartLink itemCount={itemCount} />
+            <HeaderCartLink />
             <HeaderProfileLink />
           </div>
         </div>

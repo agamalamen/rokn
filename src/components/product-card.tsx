@@ -1,26 +1,31 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Price } from "@/components/price";
+import { shopifyImageUrl } from "@/lib/shopify/image";
 import type { ProductCard as ProductCardType } from "@/lib/shopify/types";
 
 type ProductCardProps = {
   product: ProductCardType;
   variant?: "grid" | "shelf";
   singleLineTitle?: boolean;
+  priority?: boolean;
 };
 
 export function ProductCard({
   product,
   variant = "grid",
   singleLineTitle = false,
+  priority = false,
 }: ProductCardProps) {
   const image = product.featuredImage;
   const isShelf = variant === "shelf";
+  const imageWidth = isShelf ? 352 : 400;
 
   return (
     <Link
       href={`/products/${product.handle}`}
       className={`group flex flex-col ${isShelf ? "w-36 shrink-0 sm:w-44" : ""}`}
+      prefetch
     >
       <div
         className={`relative overflow-hidden bg-surface ${
@@ -29,9 +34,10 @@ export function ProductCard({
       >
         {image ? (
           <Image
-            src={image.url}
+            src={shopifyImageUrl(image.url, imageWidth)}
             alt={image.altText ?? product.title}
             fill
+            priority={priority}
             sizes={isShelf ? "176px" : "(max-width: 768px) 50vw, 25vw"}
             className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />

@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
+import { CatalogPagination } from "@/components/catalog-pagination";
 import { ProductGrid } from "@/components/product-grid";
 import { isShopifyConfigured } from "@/lib/constants";
-import { searchProducts } from "@/lib/shopify";
+import { searchProductsPage } from "@/lib/shopify";
 
 type SearchPageProps = {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    after?: string;
+    before?: string;
+    page?: string;
+  }>;
 };
 
 export async function generateMetadata({
@@ -21,10 +27,24 @@ export async function generateMetadata({
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const { q } = await searchParams;
+  const { q, after, before, page: pageParam } = await searchParams;
   const query = q?.trim() ?? "";
-  const products =
-    query && isShopifyConfigured() ? await searchProducts(query, 24) : [];
+  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
+
+  const emptyPageInfo = {
+    hasNextPage: false,
+    hasPreviousPage: false,
+    startCursor: null,
+    endCursor: null,
+  };
+
+  const { products, pageInfo } =
+    query && isShopifyConfigured()
+      ? await searchProductsPage({
+          query,
+          ...(before ? { before } : { after: after ?? null }),
+        })
+      : { products: [], pageInfo: emptyPageInfo };
 
   return (
     <div className="py-6">
@@ -35,7 +55,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         {query && (
           <p className="mt-1 text-sm text-muted">
             {products.length}{" "}
-            {products.length === 1 ? "product" : "products"} found
+            {products.length === 1 ? "product" : "products"} on this page
           </p>
         )}
       </div>
@@ -45,11 +65,19 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           Enter a search term to find products.
         </p>
       ) : (
-        <ProductGrid
-          products={products}
-          singleLineTitle
-          emptyMessage={`No products found for "${query}".`}
-        />
+        <>
+          <ProductGrid
+            products={products}
+            singleLineTitle
+            emptyMessage={`No products found for "${query}".`}
+          />
+          <CatalogPagination
+            basePath="/search"
+            pageInfo={pageInfo}
+            page={page}
+            query={{ q: query }}
+          />
+        </>
       )}
     </div>
   );

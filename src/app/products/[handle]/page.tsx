@@ -3,14 +3,12 @@ import { notFound } from "next/navigation";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
 import { ProductPurchaseOptions } from "@/components/product-purchase-options";
 import { isShopifyConfigured } from "@/lib/constants";
-import { getProductByHandle } from "@/lib/shopify";
+import { getProductByHandle, getProductHeaderByHandle } from "@/lib/shopify";
 import type { Image } from "@/lib/shopify/types";
 
 type ProductPageProps = {
   params: Promise<{ handle: string }>;
 };
-
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -20,7 +18,7 @@ export async function generateMetadata({
   }
 
   const { handle } = await params;
-  const product = await getProductByHandle(handle);
+  const product = await getProductHeaderByHandle(handle);
 
   if (!product) {
     return { title: "Product not found" };

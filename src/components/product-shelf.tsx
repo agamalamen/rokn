@@ -23,12 +23,13 @@ export function ProductShelf({
     <section className="py-6">
       <SectionHeader title={title} href={href} />
       <div className="shelf-scroll flex gap-3 overflow-x-auto px-4 sm:gap-4 sm:px-6 lg:px-8">
-        {products.map((product) => (
+        {products.map((product, index) => (
           <ProductCard
             key={product.id}
             product={product}
             variant="shelf"
             singleLineTitle={singleLineTitle}
+            priority={index < 2}
           />
         ))}
       </div>

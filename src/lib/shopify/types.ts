@@ -18,6 +18,14 @@ export type ProductVariant = {
   price: Money;
 };
 
+export type Collection = {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  image: Image | null;
+};
+
 export type Product = {
   id: string;
   handle: string;
@@ -41,6 +49,11 @@ export type Product = {
   };
 };
 
+export type ProductHeader = Pick<
+  Product,
+  "id" | "handle" | "title" | "vendor" | "description" | "collections"
+>;
+
 export type ProductCard = Pick<
   Product,
   "id" | "handle" | "title" | "productType" | "featuredImage" | "priceRange"
@@ -58,12 +71,15 @@ export type ProductsPageResult = {
   pageInfo: PageInfo;
 };
 
-export type Collection = {
-  id: string;
-  handle: string;
-  title: string;
-  description: string;
-  image: Image | null;
+export type CollectionPageResult = {
+  collection: Collection;
+  products: ProductCard[];
+  pageInfo: PageInfo;
+};
+
+export type SearchPageResult = {
+  products: ProductCard[];
+  pageInfo: PageInfo;
 };
 
 export type CartLine = {

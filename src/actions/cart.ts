@@ -35,18 +35,24 @@ async function getOrCreateCartId(): Promise<string> {
   return cart.id;
 }
 
-function revalidateCartSurfaces() {
+function revalidateCartPage() {
   revalidatePath("/cart");
-  revalidatePath("/", "layout");
 }
 
-export async function addItemToCart(variantId: string, quantity = 1) {
+export async function addItemToCart(
+  variantId: string,
+  quantity = 1,
+): Promise<number> {
   const cartId = await getOrCreateCartId();
-  await addToCart(cartId, [{ merchandiseId: variantId, quantity }]);
-  revalidateCartSurfaces();
+  const cart = await addToCart(cartId, [{ merchandiseId: variantId, quantity }]);
+  revalidateCartPage();
+  return cart.totalQuantity;
 }
 
-export async function updateItemQuantity(lineId: string, quantity: number) {
+export async function updateItemQuantity(
+  lineId: string,
+  quantity: number,
+): Promise<number> {
   const cookieStore = await cookies();
   const cartId = cookieStore.get(CART_COOKIE_NAME)?.value;
 
@@ -54,16 +60,16 @@ export async function updateItemQuantity(lineId: string, quantity: number) {
     throw new Error("Cart not found");
   }
 
-  if (quantity <= 0) {
-    await removeFromCart(cartId, [lineId]);
-  } else {
-    await updateCartLine(cartId, [{ id: lineId, quantity }]);
-  }
+  const cart =
+    quantity <= 0
+      ? await removeFromCart(cartId, [lineId])
+      : await updateCartLine(cartId, [{ id: lineId, quantity }]);
 
-  revalidateCartSurfaces();
+  revalidateCartPage();
+  return cart.totalQuantity;
 }
 
-export async function removeItemFromCart(lineId: string) {
+export async function removeItemFromCart(lineId: string): Promise<number> {
   const cookieStore = await cookies();
   const cartId = cookieStore.get(CART_COOKIE_NAME)?.value;
 
@@ -71,8 +77,9 @@ export async function removeItemFromCart(lineId: string) {
     throw new Error("Cart not found");
   }
 
-  await removeFromCart(cartId, [lineId]);
-  revalidateCartSurfaces();
+  const cart = await removeFromCart(cartId, [lineId]);
+  revalidateCartPage();
+  return cart.totalQuantity;
 }
 
 export const fetchCart = cache(async function fetchCart() {

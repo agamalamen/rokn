@@ -44,12 +44,51 @@ export const getProductsQuery = `
 
 export const searchProductsQuery = `
   ${productCardFragment}
-  query searchProducts($query: String!, $first: Int!) {
-    search(query: $query, first: $first, types: [PRODUCT]) {
+  query searchProducts(
+    $query: String!
+    $first: Int!
+    $after: String
+    $last: Int
+    $before: String
+  ) {
+    search(
+      query: $query
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      types: [PRODUCT]
+    ) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
       edges {
         node {
           ... on Product {
             ...ProductCard
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getProductHeaderByHandleQuery = `
+  query getProductHeaderByHandle($handle: String!) {
+    product(handle: $handle) {
+      id
+      handle
+      title
+      vendor
+      description
+      collections(first: 20) {
+        edges {
+          node {
+            handle
+            title
           }
         }
       }
@@ -142,9 +181,8 @@ export const getCollectionsQuery = `
   }
 `;
 
-export const getCollectionByHandleQuery = `
-  ${productCardFragment}
-  query getCollectionByHandle($handle: String!, $first: Int!) {
+export const getCollectionMetaByHandleQuery = `
+  query getCollectionMetaByHandle($handle: String!) {
     collection(handle: $handle) {
       id
       handle
@@ -156,7 +194,43 @@ export const getCollectionByHandleQuery = `
         width
         height
       }
-      products(first: $first, sortKey: BEST_SELLING) {
+    }
+  }
+`;
+
+export const getCollectionByHandleQuery = `
+  ${productCardFragment}
+  query getCollectionByHandle(
+    $handle: String!
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
+    collection(handle: $handle) {
+      id
+      handle
+      title
+      description
+      image {
+        url
+        altText
+        width
+        height
+      }
+      products(
+        first: $first
+        after: $after
+        last: $last
+        before: $before
+        sortKey: BEST_SELLING
+      ) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
         edges {
           node {
             ...ProductCard

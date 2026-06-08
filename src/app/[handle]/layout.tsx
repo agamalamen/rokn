@@ -1,14 +1,12 @@
 import { notFound } from "next/navigation";
 import { ProductVendorHeader } from "@/components/product-vendor-header";
 import { isShopifyConfigured } from "@/lib/constants";
-import { getShopCollectionBySlug } from "@/lib/shopify";
+import { getShopCollectionMetaBySlug } from "@/lib/shopify";
 
 type ShopLayoutProps = {
   children: React.ReactNode;
   params: Promise<{ handle: string }>;
 };
-
-export const dynamic = "force-dynamic";
 
 export default async function ShopLayout({
   children,
@@ -19,7 +17,7 @@ export default async function ShopLayout({
   }
 
   const { handle: shopSlug } = await params;
-  const collection = await getShopCollectionBySlug(shopSlug);
+  const collection = await getShopCollectionMetaBySlug(shopSlug);
 
   if (!collection) {
     notFound();

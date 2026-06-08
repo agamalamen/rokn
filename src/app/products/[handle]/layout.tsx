@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { ProductVendorHeader } from "@/components/product-vendor-header";
 import { isShopifyConfigured } from "@/lib/constants";
-import { getProductByHandle } from "@/lib/shopify";
+import { getProductHeaderByHandle } from "@/lib/shopify";
 import {
   findVendorCollection,
   getShopSlug,
@@ -12,8 +12,6 @@ type ProductLayoutProps = {
   params: Promise<{ handle: string }>;
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function ProductLayout({
   children,
   params,
@@ -23,7 +21,7 @@ export default async function ProductLayout({
   }
 
   const { handle } = await params;
-  const product = await getProductByHandle(handle);
+  const product = await getProductHeaderByHandle(handle);
 
   if (!product) {
     notFound();

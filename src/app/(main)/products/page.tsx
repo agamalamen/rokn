@@ -1,21 +1,13 @@
 import type { Metadata } from "next";
-import { ProductGrid } from "@/components/product-grid";
-import { ProductPagination } from "@/components/product-pagination";
+import { InfiniteProductGrid } from "@/components/infinite-product-grid";
 import { isShopifyConfigured } from "@/lib/constants";
-import { getProductsPage, getTotalProductPages } from "@/lib/shopify";
+import { getProductsPage } from "@/lib/shopify";
 
 export const metadata: Metadata = {
   title: "Shop",
 };
 
-type ProductsPageProps = {
-  searchParams: Promise<{ after?: string; before?: string; page?: string }>;
-};
-
-export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const { after, before, page: pageParam } = await searchParams;
-  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
-
+export default async function ProductsPage() {
   const emptyPageInfo = {
     hasNextPage: false,
     hasPreviousPage: false,
@@ -23,28 +15,24 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     endCursor: null,
   };
 
-  const [{ products, pageInfo }, totalPages] = isShopifyConfigured()
-    ? await Promise.all([
-        getProductsPage(
-          before ? { before } : { after: after ?? null },
-        ),
-        getTotalProductPages(),
-      ])
-    : [{ products: [], pageInfo: emptyPageInfo }, 1];
+  const { products, pageInfo } = isShopifyConfigured()
+    ? await getProductsPage()
+    : { products: [], pageInfo: emptyPageInfo };
 
   return (
     <div className="py-6">
       <div className="mb-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold tracking-tight">All products</h1>
-        <p className="mt-1 text-sm text-muted">
-          Browse the full catalog
-        </p>
+        <p className="mt-1 text-sm text-muted">Browse the full catalog</p>
       </div>
-      <ProductGrid products={products} />
-      <ProductPagination
-        pageInfo={pageInfo}
-        page={Math.min(page, totalPages)}
-        totalPages={totalPages}
+      <InfiniteProductGrid
+        initialProducts={products}
+        initialPageInfo={pageInfo}
+        emptyMessage={
+          isShopifyConfigured()
+            ? "No products found in your Shopify store yet."
+            : "Connect Shopify to load products from your store."
+        }
       />
     </div>
   );
