@@ -52,8 +52,8 @@ export function MobileNav() {
   const { count: itemCount } = useCartCount();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-white/95 backdrop-blur-md sm:hidden">
-      <div className="flex items-stretch justify-around pb-[env(safe-area-inset-bottom,0px)]">
+    <nav className="fixed inset-x-0 bottom-0 z-50 overflow-hidden rounded-t-3xl border-t border-border bg-white/95 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] backdrop-blur-md sm:hidden">
+      <div className="flex min-h-[4.75rem] items-stretch justify-around pb-[env(safe-area-inset-bottom,0px)] pt-1.5">
         {navItems.map((item) => (
           <MobileNavItem
             key={item.href}
@@ -83,7 +83,7 @@ function MobileNavItem({
   return (
     <Link
       href={item.href}
-      className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors ${
+      className={`flex flex-1 flex-col items-center gap-1 py-3.5 text-[10px] font-medium transition-colors ${
         active ? "text-foreground" : "text-muted"
       }`}
       aria-current={active ? "page" : undefined}
