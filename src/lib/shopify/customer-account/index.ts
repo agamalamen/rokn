@@ -9,8 +9,10 @@ import {
   CUSTOMER_SESSION_MAX_AGE,
   getOAuthRedirectUri,
   isCustomerAccountConfigured,
+  isInsecureOAuthRedirectUri,
 } from "@/lib/shopify/customer-account/config";
 import { customerAccountProfileQuery } from "@/lib/shopify/customer-account/queries";
+import { getSiteUrl, normalizeSiteOrigin } from "@/lib/site-url";
 import type {
   CustomerAccountApiConfiguration,
   CustomerAccountProfile,
@@ -73,15 +75,23 @@ async function getDiscoveryConfig() {
 
 export async function getAppOrigin() {
   const requestHeaders = await headers();
-  const host =
-    requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
+  const host = (
+    requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host")
+  )
+    ?.split(",")[0]
+    ?.trim();
   const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
 
   if (host) {
-    return `${protocol}://${host}`;
+    const origin = normalizeSiteOrigin(`${protocol}://${host}`);
+    const redirectUri = `${origin}/api/customer-auth/callback`;
+
+    if (!isInsecureOAuthRedirectUri(redirectUri)) {
+      return origin;
+    }
   }
 
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  return getSiteUrl();
 }
 
 function createOAuthValue() {

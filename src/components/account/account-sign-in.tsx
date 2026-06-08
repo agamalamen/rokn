@@ -3,7 +3,7 @@ import { getCustomerAccountLoginPath } from "@/lib/shopify/customer-account";
 
 const ERROR_MESSAGES: Record<string, string> = {
   auth_redirect:
-    "Customer sign-in requires an HTTPS public URL (for example via ngrok). Set NEXT_PUBLIC_SITE_URL in .env.local and add the same callback URL in Shopify admin.",
+    "Customer sign-in requires an HTTPS public URL. Set NEXT_PUBLIC_SITE_URL to your production domain (for example https://rokn-jade.vercel.app) in Vercel environment variables, and register the same callback URL in Shopify admin.",
   redirect_uri:
     "The callback URL in Shopify admin does not match this app. Register your HTTPS callback URL under Headless > Customer Account API > Application setup.",
   login_failed: "We couldn't complete sign-in. Please try again.",

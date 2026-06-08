@@ -1,4 +1,5 @@
 import { SHOPIFY_STORE_DOMAIN, isShopifyConfigured } from "@/lib/constants";
+import { getSiteUrl, normalizeSiteOrigin } from "@/lib/site-url";
 
 export const SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID =
   process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID ?? "";
@@ -27,14 +28,25 @@ export function getCustomerAccountLoginPath() {
   return "/api/customer-auth/login";
 }
 
-export function getOAuthRedirectUri(requestOrigin: string) {
+export function getOAuthRedirectUri(requestOrigin?: string) {
   if (SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI) {
-    return SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI.replace(/\/$/, "");
+    return normalizeSiteOrigin(SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI);
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
-  const origin = siteUrl || requestOrigin;
-  return `${origin}/api/customer-auth/callback`;
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    getSiteUrl(),
+    requestOrigin,
+  ].filter(Boolean) as string[];
+
+  for (const candidate of candidates) {
+    const uri = `${normalizeSiteOrigin(candidate)}/api/customer-auth/callback`;
+    if (!isInsecureOAuthRedirectUri(uri)) {
+      return uri;
+    }
+  }
+
+  return `${getSiteUrl()}/api/customer-auth/callback`;
 }
 
 export function isInsecureOAuthRedirectUri(uri: string) {
