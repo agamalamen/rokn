@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CartCountLoader } from "@/components/cart-count-loader";
 import { CartCountProvider } from "@/components/cart-count-provider";
 import { SetupBanner } from "@/components/setup-banner";
@@ -49,6 +50,7 @@ export default function RootLayout({
           {children}
           <MobileNav />
         </CartCountProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
