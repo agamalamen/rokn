@@ -8,6 +8,7 @@ const ERROR_MESSAGES: Record<string, string> = {
     "The callback URL in Shopify admin does not match this app. Register your HTTPS callback URL under Headless > Customer Account API > Application setup.",
   login_failed: "We couldn't complete sign-in. Please try again.",
   missing_code: "Sign-in was interrupted. Please try again.",
+  session_expired: "Your session expired. Please sign in again.",
 };
 
 type AccountSignInProps = {

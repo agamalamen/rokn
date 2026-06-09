@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { AccountProfile } from "@/components/account/account-profile";
-import { AccountSignIn } from "@/components/account/account-sign-in";
+import { AccountSessionGate } from "@/components/account/account-session-gate";
 import {
   getCustomerAccountProfile,
   isCustomerAccountConfigured,
   readCustomerSession,
 } from "@/lib/shopify/customer-account";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Account",
@@ -40,20 +40,16 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
   }
 
   const session = await readCustomerSession();
-
-  if (session && session.expiresAt <= Date.now()) {
-    redirect("/api/customer-auth/refresh");
-  }
-
-  const customer = await getCustomerAccountProfile();
+  const needsRefresh = Boolean(session && session.expiresAt <= Date.now());
+  const customer = needsRefresh ? null : await getCustomerAccountProfile();
 
   return (
     <div className="py-6">
-      {customer ? (
-        <AccountProfile customer={customer} />
-      ) : (
-        <AccountSignIn error={error ?? null} />
-      )}
+      <AccountSessionGate
+        customer={customer}
+        needsRefresh={needsRefresh}
+        error={error ?? null}
+      />
     </div>
   );
 }
