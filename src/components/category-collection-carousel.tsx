@@ -134,7 +134,7 @@ export function CategoryCollectionCarousel({
 
         <div
           ref={scrollRef}
-          className="shelf-scroll flex items-center gap-2.5 overflow-x-auto py-1.5 scroll-pl-4 pl-4 pr-4 sm:gap-3 sm:scroll-pl-6 sm:pl-6 sm:pr-6 lg:scroll-pl-8 lg:pl-8 lg:pr-8"
+          className="shelf-scroll flex items-center gap-2.5 overflow-x-auto py-1.5 scroll-pl-4 pl-4 pr-4 sm:gap-3 sm:scroll-pl-6 sm:pl-6 sm:pr-6 lg:mx-8 lg:scroll-pl-0 lg:pl-0 lg:pr-0"
         >
           {collections.map((collection, index) => (
             <CategoryPill

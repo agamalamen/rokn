@@ -24,7 +24,7 @@ export function ProductShelf({
   return (
     <section className="py-6">
       <SectionHeader title={title} href={href} />
-      <div className="shelf-scroll flex gap-3 overflow-x-auto px-4 sm:gap-4 sm:px-6 lg:px-8">
+      <div className="shelf-scroll flex gap-3 overflow-x-auto px-4 sm:gap-4 sm:px-6 lg:mx-8 lg:px-0">
         {products.map((product, index) => (
           <ProductCard
             key={product.id}

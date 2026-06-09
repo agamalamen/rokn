@@ -13,7 +13,7 @@ export default async function CollectionsPage() {
     : [];
 
   return (
-    <div className="py-6">
+    <div className="py-6 lg:px-12">
       <div className="mb-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold tracking-tight">Browse categories</h1>
       </div>

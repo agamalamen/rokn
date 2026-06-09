@@ -66,17 +66,19 @@ export default async function CollectionPage({
   }
 
   return (
-    <CollectionView
-      collection={{
-        ...collectionPage.collection,
-        products: collectionPage.products,
-      }}
-      pagination={{
-        basePath: `/collections/${handle}`,
-        pageInfo: collectionPage.pageInfo,
-        page: Math.min(page, totalPages),
-        totalPages,
-      }}
-    />
+    <div className="lg:px-12">
+      <CollectionView
+        collection={{
+          ...collectionPage.collection,
+          products: collectionPage.products,
+        }}
+        pagination={{
+          basePath: `/collections/${handle}`,
+          pageInfo: collectionPage.pageInfo,
+          page: Math.min(page, totalPages),
+          totalPages,
+        }}
+      />
+    </div>
   );
 }

@@ -30,7 +30,7 @@ export function ProductGrid({
     <div
       className={
         isShelf
-          ? "grid grid-cols-[repeat(auto-fill,9rem)] gap-3 px-4 sm:grid-cols-[repeat(auto-fill,11rem)] sm:gap-4 sm:px-6 lg:px-8"
+          ? "grid grid-cols-[repeat(auto-fill,9rem)] justify-between gap-3 px-4 sm:grid-cols-[repeat(auto-fill,11rem)] sm:gap-4 sm:px-6 lg:px-8"
           : "grid grid-cols-2 gap-x-3 gap-y-6 px-4 sm:grid-cols-3 sm:gap-x-4 sm:px-6 lg:grid-cols-4 lg:px-8"
       }
     >

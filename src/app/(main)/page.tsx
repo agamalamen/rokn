@@ -22,7 +22,7 @@ export default async function HomePage() {
   const trending = products.slice(4, 12);
 
   return (
-    <div className="pb-4">
+    <div className="pb-4 sm:px-8 lg:px-12">
       <CategoryCollectionCarousel collections={categoryCollections} />
 
       <ProductShelf
@@ -47,6 +47,7 @@ export default async function HomePage() {
         <ProductGrid
           products={products.slice(0, 4)}
           singleLineTitle
+          cardVariant="shelf"
           priorityCount={0}
           emptyMessage={
             shopifyConfigured
