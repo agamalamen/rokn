@@ -1,16 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import dynamic from "next/dynamic";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CartCountLoader } from "@/components/cart-count-loader";
 import { CartCountProvider } from "@/components/cart-count-provider";
+import { MobileNav } from "@/components/mobile-nav";
 import { SetupBanner } from "@/components/setup-banner";
 import "./globals.css";
-
-const MobileNav = dynamic(
-  () => import("@/components/mobile-nav").then((mod) => mod.MobileNav),
-  { ssr: true },
-);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,11 +30,14 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const initialPathname = headersList.get("x-pathname") ?? "/";
+
   return (
     <html
       lang="en"
@@ -58,7 +57,7 @@ export default function RootLayout({
               <SetupBanner />
               {children}
             </div>
-            <MobileNav />
+            <MobileNav initialPathname={initialPathname} />
           </div>
         </CartCountProvider>
         <SpeedInsights />

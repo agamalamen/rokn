@@ -22,7 +22,7 @@ const navItems: { href: string; label: string; icon: LucideIcon }[] = [
 
 function isNavItemActive(href: string, pathname: string) {
   if (href === "/") {
-    return pathname === "/";
+    return pathname === "/" || pathname === "";
   }
 
   if (href === "/products") {
@@ -36,8 +36,13 @@ function isNavItemActive(href: string, pathname: string) {
   return pathname.startsWith(href);
 }
 
-export function MobileNav() {
-  const pathname = usePathname();
+type MobileNavProps = {
+  initialPathname: string;
+};
+
+export function MobileNav({ initialPathname }: MobileNavProps) {
+  const clientPathname = usePathname();
+  const pathname = clientPathname ?? initialPathname;
   const { count: itemCount } = useCartCount();
 
   return (
