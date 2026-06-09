@@ -55,8 +55,8 @@ function FooterSection({
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-border bg-cream pb-8">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <footer className="mt-auto border-t border-border bg-cream">
+      <div className="mx-auto flex max-w-7xl flex-col px-4 pt-8 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8">
           <FooterSection title="Information" links={informationLinks} />
           <FooterSection
@@ -64,6 +64,8 @@ export function Footer() {
             links={socialLinks.map((link) => ({ ...link, external: true }))}
           />
         </div>
+        <hr className="mt-16 border-border" />
+        <p className="pb-10 pt-6 text-xs text-muted">© Rokn. 2026</p>
       </div>
     </footer>
   );
