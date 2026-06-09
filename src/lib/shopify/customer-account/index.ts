@@ -212,6 +212,16 @@ async function refreshCustomerSession(refreshToken: string) {
   return tokenResponse.access_token;
 }
 
+export async function refreshCustomerSessionFromCookie() {
+  const session = await readCustomerSession();
+
+  if (!session) {
+    throw new Error("Missing customer session");
+  }
+
+  return refreshCustomerSession(session.refreshToken);
+}
+
 async function saveCustomerSession(tokenResponse: TokenResponse) {
   const cookieStore = await cookies();
   const session: CustomerSession = {
@@ -236,7 +246,7 @@ export async function clearCustomerSession() {
   cookieStore.delete(CUSTOMER_OAUTH_STATE_COOKIE);
 }
 
-async function getValidAccessToken() {
+export async function readCustomerSession(): Promise<CustomerSession | null> {
   const cookieStore = await cookies();
   const sessionRaw = cookieStore.get(CUSTOMER_SESSION_COOKIE)?.value;
 
@@ -244,19 +254,21 @@ async function getValidAccessToken() {
     return null;
   }
 
-  const session = JSON.parse(sessionRaw) as CustomerSession;
-  const expiresSoon = session.expiresAt - Date.now() < 60_000;
-
-  if (!expiresSoon) {
-    return session.accessToken;
-  }
-
   try {
-    return await refreshCustomerSession(session.refreshToken);
+    return JSON.parse(sessionRaw) as CustomerSession;
   } catch {
-    await clearCustomerSession();
     return null;
   }
+}
+
+async function getValidAccessToken() {
+  const session = await readCustomerSession();
+
+  if (!session || session.expiresAt <= Date.now()) {
+    return null;
+  }
+
+  return session.accessToken;
 }
 
 export async function getCustomerAccountProfile() {
@@ -285,7 +297,6 @@ export async function getCustomerAccountProfile() {
   });
 
   if (response.status === 401) {
-    await clearCustomerSession();
     return null;
   }
 

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { AccountProfile } from "@/components/account/account-profile";
 import { AccountSignIn } from "@/components/account/account-sign-in";
 import {
   getCustomerAccountProfile,
   isCustomerAccountConfigured,
+  readCustomerSession,
 } from "@/lib/shopify/customer-account";
 
 export const metadata: Metadata = {
@@ -35,6 +37,12 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
         </div>
       </div>
     );
+  }
+
+  const session = await readCustomerSession();
+
+  if (session && session.expiresAt <= Date.now()) {
+    redirect("/api/customer-auth/refresh");
   }
 
   const customer = await getCustomerAccountProfile();
