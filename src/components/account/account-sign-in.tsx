@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCustomerAccountLoginPath } from "@/lib/shopify/customer-account";
+import { getCustomerAccountLoginPath } from "@/lib/shopify/customer-account/config";
 
 const ERROR_MESSAGES: Record<string, string> = {
   auth_redirect:
