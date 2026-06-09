@@ -29,7 +29,7 @@ export default async function CartPage() {
           <p className="text-sm text-muted">Your cart is empty.</p>
           <Link
             href="/products"
-            className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent-hover"
+            className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-cta px-6 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover"
           >
             Start shopping
           </Link>

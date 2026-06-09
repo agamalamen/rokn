@@ -25,7 +25,7 @@ export function AddToCartButton({
       type="button"
       onClick={handleClick}
       disabled={!availableForSale || isPending}
-      className="inline-flex h-12 w-full items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:bg-neutral-300"
+      className="inline-flex h-12 w-full items-center justify-center rounded-full bg-cta px-6 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover disabled:cursor-not-allowed disabled:bg-neutral-300"
     >
       {isPending ? "Adding..." : availableForSale ? "Add to cart" : "Sold out"}
     </button>

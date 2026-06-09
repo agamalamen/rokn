@@ -13,6 +13,10 @@
   --accent-hover: #b39ef0;
   --accent-foreground: #1b1b1b;
 
+  --cta: #1b1b1b;
+  --cta-hover: #333333;
+  --cta-foreground: #ffffff;
+
   --pastel-purple: #c4b1f9;
   --pastel-blue: #b1d8fc;
 }
@@ -27,6 +31,9 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+  --color-cta-foreground: var(--cta-foreground);
   --color-pastel-purple: var(--pastel-purple);
   --color-pastel-blue: var(--pastel-blue);
   --font-sans: var(--font-geist-sans);
