@@ -479,11 +479,6 @@ export async function getCategoryBrowseCollections(): Promise<CategoryBrowseItem
   return collections.filter((collection) => !isShopCollection(collection));
 }
 
-export async function getShopBrowseCollections(): Promise<CategoryBrowseItem[]> {
-  const collections = await getCachedBrowseCollections();
-  return collections.filter((collection) => isShopCollection(collection));
-}
-
 export const getCollectionMetaByHandle = cache(async function getCollectionMetaByHandle(
   handle: string,
 ): Promise<Collection | null> {
