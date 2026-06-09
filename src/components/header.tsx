@@ -1,12 +1,5 @@
 import Link from "next/link";
-import { HeaderCartLink } from "@/components/header-cart-link";
-import { HeaderProfileLink } from "@/components/header-profile-link";
 import { HeaderSearch } from "@/components/header-search";
-
-const navLinks = [
-  { href: "/products", label: "Shop" },
-  { href: "/collections", label: "Collections" },
-];
 
 export function Header() {
   return (
@@ -20,24 +13,6 @@ export function Header() {
           >
             Rokn
           </Link>
-
-          <nav className="absolute left-0 hidden items-center gap-6 sm:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-muted transition-colors hover:text-foreground"
-                prefetch
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="absolute right-0 flex items-center gap-2 sm:gap-4">
-            <HeaderCartLink />
-            <HeaderProfileLink />
-          </div>
         </div>
 
         <HeaderSearch />

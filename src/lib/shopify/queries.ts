@@ -46,7 +46,7 @@ export const searchProductsQuery = `
   ${productCardFragment}
   query searchProducts(
     $query: String!
-    $first: Int!
+    $first: Int
     $after: String
     $last: Int
     $before: String

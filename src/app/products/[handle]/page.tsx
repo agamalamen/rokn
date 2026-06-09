@@ -54,26 +54,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
         : [];
 
   return (
-    <div className="pb-6">
-      <ProductImageCarousel images={carouselImages} title={product.title} />
+    <div className="pb-6 lg:mx-auto lg:max-w-7xl">
+      <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-12 lg:px-8">
+        <ProductImageCarousel images={carouselImages} title={product.title} />
 
-      <div className="flex flex-col gap-4 px-4 py-4 sm:gap-5 sm:px-6 sm:py-6 lg:mx-auto lg:max-w-lg lg:px-8">
-        <div>
-          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-            {product.title}
-          </h1>
+        <div className="flex flex-col gap-4 px-4 py-4 sm:gap-5 sm:px-6 sm:py-6 lg:px-0 lg:py-8">
+          <div>
+            <h1 className="text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl">
+              {product.title}
+            </h1>
+          </div>
+
+          {variants.length > 0 && (
+            <ProductPurchaseOptions variants={variants} />
+          )}
+
+          {product.description && (
+            <div
+              className="prose prose-sm max-w-none text-muted lg:prose-base"
+              dangerouslySetInnerHTML={{ __html: product.description }}
+            />
+          )}
         </div>
-
-        {variants.length > 0 && (
-          <ProductPurchaseOptions variants={variants} />
-        )}
-
-        {product.description && (
-          <div
-            className="prose prose-sm max-w-none text-muted"
-            dangerouslySetInnerHTML={{ __html: product.description }}
-          />
-        )}
       </div>
     </div>
   );

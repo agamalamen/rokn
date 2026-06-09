@@ -25,11 +25,11 @@ function CategoryCard({ category, colorIndex }: CategoryCardProps) {
   return (
     <Link
       href={getShopUrl(category)}
-      className="group flex aspect-[5/4] flex-col justify-between overflow-hidden rounded-3xl p-3.5"
+      className="group flex aspect-[3/2] flex-col justify-between overflow-hidden rounded-3xl p-3.5 lg:aspect-[2/1]"
       style={{ backgroundColor }}
     >
       <h2
-        className="text-base font-semibold leading-tight"
+        className="text-base font-semibold leading-tight lg:text-xl"
         style={{ color: labelColor }}
       >
         {category.title}
@@ -39,7 +39,7 @@ function CategoryCard({ category, colorIndex }: CategoryCardProps) {
         {previewSlots.map((product, index) => (
           <div
             key={product?.id ?? `placeholder-${index}`}
-            className={`aspect-square w-[40%] overflow-hidden rounded-xl motion-safe:transform-gpu motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:shadow-[0_14px_28px_-10px_rgba(0,0,0,0.45)] ${
+            className={`aspect-square w-[30%] overflow-hidden rounded-xl lg:w-[22%] motion-safe:transform-gpu motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:shadow-[0_14px_28px_-10px_rgba(0,0,0,0.45)] ${
               index === 0
                 ? "motion-safe:group-hover:-translate-x-1 motion-safe:group-hover:-translate-y-2.5 motion-safe:group-hover:-rotate-3 motion-safe:group-hover:scale-105"
                 : "motion-safe:delay-75 motion-safe:group-hover:translate-x-1 motion-safe:group-hover:-translate-y-3.5 motion-safe:group-hover:rotate-3 motion-safe:group-hover:scale-105"

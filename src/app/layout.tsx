@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CartCountLoader } from "@/components/cart-count-loader";
 import { CartCountProvider } from "@/components/cart-count-provider";
+import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { MobileNav } from "@/components/mobile-nav";
 import { SetupBanner } from "@/components/setup-banner";
 import "./globals.css";
@@ -48,7 +49,8 @@ export default async function RootLayout({
       </head>
       <body className="bg-background text-foreground">
         <CartCountProvider initialCount={0}>
-          <div className="max-sm:flex max-sm:h-dvh max-sm:flex-col max-sm:overflow-hidden">
+          <DesktopSidebar initialPathname={initialPathname} />
+          <div className="max-sm:flex max-sm:h-dvh max-sm:flex-col max-sm:overflow-hidden sm:min-h-dvh sm:pl-[4.5rem]">
             <div
               id="app-scroll"
               className="max-sm:min-h-0 max-sm:flex-1 max-sm:overflow-y-auto"
