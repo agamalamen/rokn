@@ -1,24 +1,20 @@
 @import "tailwindcss";
 
 :root {
+  /* Deel-inspired palette */
   --background: #ffffff;
-  --foreground: #1a1a1a;
-  --muted: #737373;
+  --foreground: #1b1b1b;
+  --muted: #5c5c5c;
   --border: #ebebeb;
-  --surface: #f7f7f7;
+  --surface: #ffffff;
+  --cream: #fffbf4;
 
-  /* Active palette: Forest */
-  --accent: #16a34a;
-  --accent-hover: #15803d;
+  --accent: #c4b1f9;
+  --accent-hover: #b39ef0;
+  --accent-foreground: #1b1b1b;
 
-  /*
-    Coffee brown: #7c4a2d / #5c3822
-    Warm clay:    #c4622d / #a35124
-    Ink navy:     #1e40af / #1e3a8a
-    Burnt amber:  #d97706 / #b45309
-    Soft teal:    #2dd4bf / #14b8a6
-    Deep plum:    #9333ea / #7e22ce
-  */
+  --pastel-purple: #c4b1f9;
+  --pastel-blue: #b1d8fc;
 }
 
 @theme inline {
@@ -27,8 +23,12 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-surface: var(--surface);
+  --color-cream: var(--cream);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-pastel-purple: var(--pastel-purple);
+  --color-pastel-blue: var(--pastel-blue);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -57,4 +57,3 @@ body {
 .shelf-scroll::-webkit-scrollbar {
   display: none;
 }
-

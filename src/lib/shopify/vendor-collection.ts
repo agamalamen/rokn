@@ -1,6 +1,6 @@
 import type { Image } from "@/lib/shopify/types";
 
-const GENERIC_COLLECTION_HANDLES = new Set([
+const GENERIC_COLLECTION_HANDLES = [
   "accessories",
   "ahmed-s-stuff",
   "all-products",
@@ -17,7 +17,18 @@ const GENERIC_COLLECTION_HANDLES = new Set([
   "other",
   "palestine",
   "weekly-collection",
-]);
+] as const;
+
+function normalizeGenericSlug(slug: string) {
+  return slug
+    .toLowerCase()
+    .replace(/-and-/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+const NORMALIZED_GENERIC_SLUGS = new Set(
+  GENERIC_COLLECTION_HANDLES.map(normalizeGenericSlug),
+);
 
 export type VendorCollection = {
   handle: string;
@@ -37,10 +48,21 @@ function slugifyVendor(vendor: string) {
   return slugifyShopName(vendor);
 }
 
-export function isShopCollection(
-  collection: Pick<VendorCollection, "handle">,
+export function isGenericCollection(
+  collection: Pick<VendorCollection, "handle" | "title">,
 ) {
-  return !GENERIC_COLLECTION_HANDLES.has(collection.handle);
+  const candidates = [
+    collection.handle,
+    slugifyShopName(collection.title),
+  ].map(normalizeGenericSlug);
+
+  return candidates.some((candidate) => NORMALIZED_GENERIC_SLUGS.has(candidate));
+}
+
+export function isShopCollection(
+  collection: Pick<VendorCollection, "handle" | "title">,
+) {
+  return !isGenericCollection(collection);
 }
 
 export function getShopSlug(collection: Pick<VendorCollection, "title">) {
@@ -88,9 +110,5 @@ export function findVendorCollection(
     return byWord;
   }
 
-  return (
-    collections.find(
-      (collection) => !GENERIC_COLLECTION_HANDLES.has(collection.handle),
-    ) ?? null
-  );
+  return collections.find((collection) => isShopCollection(collection)) ?? null;
 }

@@ -44,7 +44,7 @@ export function AccountProfile({ customer }: AccountProfileProps) {
             <p className="text-sm text-muted">You don&apos;t have any orders yet.</p>
             <a
               href="/products"
-              className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
+              className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent-hover"
             >
               Start shopping
             </a>

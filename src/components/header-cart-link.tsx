@@ -16,7 +16,7 @@ export function HeaderCartLink() {
     >
       <ShoppingCart className="h-6 w-6 text-foreground" strokeWidth={1.75} />
       {itemCount > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 inline-flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
+        <span className="absolute -right-0.5 -top-0.5 inline-flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-bold text-white">
           {itemCount}
         </span>
       )}

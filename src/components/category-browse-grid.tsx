@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getCategoryBackgroundColor } from "@/lib/shopify/category-colors";
+import {
+  getCategoryBackgroundColor,
+  getCategoryLabelColor,
+} from "@/lib/shopify/category-colors";
 import { shopifyImageUrl } from "@/lib/shopify/image";
 import type { CategoryBrowseItem } from "@/lib/shopify/types";
 import { getShopUrl } from "@/lib/shopify/vendor-collection";
@@ -16,6 +19,7 @@ type CategoryCardProps = {
 
 function CategoryCard({ category, colorIndex }: CategoryCardProps) {
   const backgroundColor = getCategoryBackgroundColor(colorIndex);
+  const labelColor = getCategoryLabelColor(backgroundColor);
   const previewSlots = [category.previewProducts[0], category.previewProducts[1]];
 
   return (
@@ -24,7 +28,10 @@ function CategoryCard({ category, colorIndex }: CategoryCardProps) {
       className="group flex aspect-[5/4] flex-col justify-between overflow-hidden rounded-3xl p-3.5"
       style={{ backgroundColor }}
     >
-      <h2 className="text-base font-semibold leading-tight text-white">
+      <h2
+        className="text-base font-semibold leading-tight"
+        style={{ color: labelColor }}
+      >
         {category.title}
       </h2>
 

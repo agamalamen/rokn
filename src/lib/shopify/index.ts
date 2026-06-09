@@ -390,6 +390,10 @@ async function buildShopSlugMap(): Promise<Record<string, string>> {
   const map: Record<string, string> = {};
 
   for (const collection of collections) {
+    if (!isShopCollection(collection)) {
+      continue;
+    }
+
     map[slugifyShopName(collection.title)] = collection.handle;
   }
 
@@ -398,7 +402,7 @@ async function buildShopSlugMap(): Promise<Record<string, string>> {
 
 const getCachedShopSlugMap = unstable_cache(
   buildShopSlugMap,
-  ["shopify-shop-slug-map"],
+  ["shopify-shop-slug-map-v3"],
   {
     revalidate: CATALOG_REVALIDATE_SECONDS,
     tags: ["collections"],
@@ -429,7 +433,18 @@ type CategoryBrowseCollectionsResponse = {
   };
 };
 
-async function fetchCategoryBrowseCollections(): Promise<CategoryBrowseItem[]> {
+function mapBrowseCollection(
+  collection: CategoryBrowseCollectionNode,
+): CategoryBrowseItem {
+  const { products, ...meta } = collection;
+
+  return {
+    ...meta,
+    previewProducts: products.edges.map((edge) => edge.node),
+  };
+}
+
+async function fetchAllBrowseCollections(): Promise<CategoryBrowseItem[]> {
   const collections: CategoryBrowseCollectionNode[] = [];
   let cursor: string | null = null;
   let hasNextPage = true;
@@ -447,17 +462,12 @@ async function fetchCategoryBrowseCollections(): Promise<CategoryBrowseItem[]> {
     cursor = data.collections.pageInfo.endCursor;
   }
 
-  return collections
-    .filter((collection) => !isShopCollection(collection))
-    .map(({ products, ...collection }) => ({
-      ...collection,
-      previewProducts: products.edges.map((edge) => edge.node),
-    }));
+  return collections.map(mapBrowseCollection);
 }
 
-const getCachedCategoryBrowseCollections = unstable_cache(
-  fetchCategoryBrowseCollections,
-  ["shopify-category-browse-collections"],
+const getCachedBrowseCollections = unstable_cache(
+  fetchAllBrowseCollections,
+  ["shopify-browse-collections-v3"],
   {
     revalidate: CATALOG_REVALIDATE_SECONDS,
     tags: ["collections"],
@@ -465,7 +475,13 @@ const getCachedCategoryBrowseCollections = unstable_cache(
 );
 
 export async function getCategoryBrowseCollections(): Promise<CategoryBrowseItem[]> {
-  return getCachedCategoryBrowseCollections();
+  const collections = await getCachedBrowseCollections();
+  return collections.filter((collection) => !isShopCollection(collection));
+}
+
+export async function getShopBrowseCollections(): Promise<CategoryBrowseItem[]> {
+  const collections = await getCachedBrowseCollections();
+  return collections.filter((collection) => isShopCollection(collection));
 }
 
 export const getCollectionMetaByHandle = cache(async function getCollectionMetaByHandle(
@@ -621,7 +637,13 @@ export const getShopCollectionMetaBySlug = cache(async function getShopCollectio
     return null;
   }
 
-  return getCollectionMetaByHandle(handle);
+  const collection = await getCollectionMetaByHandle(handle);
+
+  if (!collection || !isShopCollection(collection)) {
+    return null;
+  }
+
+  return collection;
 });
 
 export const getShopCollectionPageBySlug = cache(
@@ -629,13 +651,13 @@ export const getShopCollectionPageBySlug = cache(
     shopSlug: string,
     options: CollectionPageOptions = {},
   ): Promise<CollectionPageResult | null> {
-    const handle = await getShopHandleBySlug(shopSlug);
+    const collection = await getShopCollectionMetaBySlug(shopSlug);
 
-    if (!handle) {
+    if (!collection) {
       return null;
     }
 
-    return getCollectionPage(handle, options);
+    return getCollectionPage(collection.handle, options);
   },
 );
 

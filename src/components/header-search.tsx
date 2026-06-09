@@ -8,7 +8,7 @@ const inputClassName =
   "h-14 w-full rounded-full border border-border/60 bg-white pl-6 pr-16 text-base text-foreground outline-none ring-1 ring-border placeholder:text-base placeholder:text-muted transition-shadow focus:border-accent/30 focus:ring-2 focus:ring-accent/40";
 
 const submitClassName =
-  "absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-white transition-colors hover:bg-accent-hover";
+  "absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent-hover";
 
 function SearchField() {
   const pathname = usePathname();

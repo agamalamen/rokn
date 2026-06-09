@@ -47,7 +47,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="" />
       </head>
-      <body className="bg-white text-foreground">
+      <body className="bg-background text-foreground">
         <CartCountProvider initialCount={0}>
           <div className="max-sm:flex max-sm:h-dvh max-sm:flex-col max-sm:overflow-hidden">
             <div

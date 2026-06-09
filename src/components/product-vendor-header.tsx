@@ -29,7 +29,7 @@ export function ProductVendorHeader({
   action,
 }: ProductVendorHeaderProps) {
   return (
-    <header className="border-b border-border bg-white">
+    <header className="border-b border-border bg-background">
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <div className="rounded-full bg-gradient-to-r from-[#5433eb] to-[#2563eb] p-[2px]">

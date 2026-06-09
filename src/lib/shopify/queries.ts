@@ -216,10 +216,13 @@ export const getCategoryBrowseCollectionsQuery = `
             width
             height
           }
-          products(first: 2, sortKey: BEST_SELLING) {
+          products(first: 4, sortKey: BEST_SELLING) {
             edges {
               node {
                 id
+                handle
+                title
+                productType
                 featuredImage {
                   url
                   altText

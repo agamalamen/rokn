@@ -4,7 +4,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getCategoryBackgroundColor } from "@/lib/shopify/category-colors";
+import {
+  getCategoryBackgroundColor,
+  getCategoryLabelColor,
+} from "@/lib/shopify/category-colors";
 import type { Collection } from "@/lib/shopify/types";
 import { getShopUrl } from "@/lib/shopify/vendor-collection";
 
@@ -19,6 +22,7 @@ type CategoryPillProps = {
 
 function CategoryPill({ collection, colorIndex }: CategoryPillProps) {
   const backgroundColor = getCategoryBackgroundColor(colorIndex);
+  const labelColor = getCategoryLabelColor(backgroundColor);
 
   return (
     <Link
@@ -39,7 +43,10 @@ function CategoryPill({ collection, colorIndex }: CategoryPillProps) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="text-sm font-bold text-white">
+          <span
+            className="text-sm font-bold"
+            style={{ color: labelColor }}
+          >
             {collection.title.charAt(0)}
           </span>
         )}

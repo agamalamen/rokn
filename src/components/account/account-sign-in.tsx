@@ -33,7 +33,7 @@ export function AccountSignIn({ error }: AccountSignInProps) {
 
       <Link
         href={getCustomerAccountLoginPath()}
-        className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
+        className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent-hover"
       >
         Sign in
       </Link>

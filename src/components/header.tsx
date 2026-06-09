@@ -10,12 +10,12 @@ const navLinks = [
 
 export function Header() {
   return (
-    <header className="bg-white">
+    <header className="bg-background">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-center py-0.5">
           <Link
             href="/"
-            className="text-[1.75rem] font-extrabold tracking-[-0.04em] text-accent sm:text-4xl"
+            className="text-[1.75rem] font-extrabold tracking-[-0.04em] text-foreground sm:text-4xl"
             prefetch
           >
             Rokn

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { DiscoverShopCarousel } from "@/components/discover-category-carousel";
 import { InfiniteProductGrid } from "@/components/infinite-product-grid";
+import { SectionHeader } from "@/components/section-header";
 import { isShopifyConfigured } from "@/lib/constants";
-import { getProductsPage } from "@/lib/shopify";
+import { getProductsPage, getShopBrowseCollections } from "@/lib/shopify";
 
 export const metadata: Metadata = {
-  title: "Shop",
+  title: "Discover",
 };
 
 export default async function ProductsPage() {
@@ -15,12 +17,16 @@ export default async function ProductsPage() {
     endCursor: null,
   };
 
-  const { products, pageInfo } = isShopifyConfigured()
-    ? await getProductsPage()
-    : { products: [], pageInfo: emptyPageInfo };
+  const shopifyConfigured = isShopifyConfigured();
+  const [{ products, pageInfo }, shops] = shopifyConfigured
+    ? await Promise.all([getProductsPage(), getShopBrowseCollections()])
+    : [{ products: [], pageInfo: emptyPageInfo }, []];
 
   return (
     <div className="py-6">
+      <SectionHeader title="Browse by shop" />
+      <DiscoverShopCarousel shops={shops} />
+
       <div className="mb-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold tracking-tight">All products</h1>
         <p className="mt-1 text-sm text-muted">Browse the full catalog</p>
@@ -29,7 +35,7 @@ export default async function ProductsPage() {
         initialProducts={products}
         initialPageInfo={pageInfo}
         emptyMessage={
-          isShopifyConfigured()
+          shopifyConfigured
             ? "No products found in your Shopify store yet."
             : "Connect Shopify to load products from your store."
         }

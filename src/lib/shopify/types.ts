@@ -79,6 +79,9 @@ export type CollectionPageResult = {
 
 export type CategoryPreviewProduct = {
   id: string;
+  handle: string;
+  title: string;
+  productType: string;
   featuredImage: Image | null;
 };
 
