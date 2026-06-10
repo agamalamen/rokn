@@ -103,7 +103,7 @@ function DesktopImageGallery({
 
   return (
     <div className="hidden lg:grid lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-4 lg:pt-8">
-      {images.length > 1 && (
+      {images.length > 0 && (
         <div className="relative h-full min-h-0 w-[4.5rem] shrink-0">
           <div className="shelf-scroll absolute inset-0 flex flex-col gap-3 overflow-y-auto overscroll-y-contain px-0.5 py-1">
             {images.map((image, index) => {
@@ -143,8 +143,8 @@ function DesktopImageGallery({
         index={selectedIndex}
         priority
         imageWidth={DESKTOP_HERO_WIDTH}
-        sizes="(min-width: 1024px) 40vw, 320px"
-        className="aspect-[4/5] w-full rounded-2xl"
+        sizes="(min-width: 1024px) 50vw, 320px"
+        className="aspect-[4/3] w-full rounded-2xl"
       />
     </div>
   );

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Breadcrumbs, type BreadcrumbItem } from "@/components/breadcrumbs";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
 import { ProductPurchaseOptions } from "@/components/product-purchase-options";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getProductByHandle, getProductHeaderByHandle } from "@/lib/shopify";
 import type { Image } from "@/lib/shopify/types";
+import { isGenericCollection } from "@/lib/shopify/vendor-collection";
 
 type ProductPageProps = {
   params: Promise<{ handle: string }>;
@@ -53,13 +55,29 @@ export default async function ProductPage({ params }: ProductPageProps) {
         ? [product.featuredImage]
         : [];
 
+  const header = await getProductHeaderByHandle(handle);
+  const categoryCollection = header?.collections.edges
+    .map((edge) => edge.node)
+    .find((collection) => isGenericCollection(collection));
+
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { label: "Homepage", href: "/" },
+    categoryCollection
+      ? {
+          label: categoryCollection.title,
+          href: `/collections/${categoryCollection.handle}`,
+        }
+      : { label: "Products", href: "/products" },
+  ];
+
   return (
     <div className="pb-6 lg:mx-auto lg:max-w-7xl">
-      <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-12 lg:px-8">
+      <div className="lg:grid lg:grid-cols-[3fr_2fr] lg:items-start lg:gap-12 lg:px-8">
         <ProductImageCarousel images={carouselImages} title={product.title} />
 
         <div className="flex flex-col gap-4 px-4 py-4 sm:gap-5 sm:px-6 sm:py-6 lg:px-0 lg:py-8">
-          <div>
+          <div className="flex flex-col gap-2">
+            <Breadcrumbs items={breadcrumbItems} />
             <h1 className="text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl">
               {product.title}
             </h1>

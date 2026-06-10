@@ -62,19 +62,21 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
   }
 
   return (
-    <CollectionView
-      collection={{
-        ...collectionPage.collection,
-        products: collectionPage.products,
-      }}
-      hideTitle
-      showFilterPills
-      pagination={{
-        basePath: `/${shopSlug}`,
-        pageInfo: collectionPage.pageInfo,
-        page: Math.min(page, totalPages),
-        totalPages,
-      }}
-    />
+    <div className="lg:px-12">
+      <CollectionView
+        collection={{
+          ...collectionPage.collection,
+          products: collectionPage.products,
+        }}
+        hideTitle
+        showFilterPills
+        pagination={{
+          basePath: `/${shopSlug}`,
+          pageInfo: collectionPage.pageInfo,
+          page: Math.min(page, totalPages),
+          totalPages,
+        }}
+      />
+    </div>
   );
 }
