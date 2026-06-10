@@ -1,7 +1,5 @@
 import { CategoryCollectionCarousel } from "@/components/category-collection-carousel";
-import { ProductGrid } from "@/components/product-grid";
 import { ProductShelf } from "@/components/product-shelf";
-import { SectionHeader } from "@/components/section-header";
 import { isShopifyConfigured } from "@/lib/constants";
 import { getCollections, getProducts } from "@/lib/shopify";
 import { isShopCollection } from "@/lib/shopify/vendor-collection";
@@ -25,37 +23,30 @@ export default async function HomePage() {
     <div className="pb-4 sm:px-8 lg:px-12">
       <CategoryCollectionCarousel collections={categoryCollections} />
 
-      <ProductShelf
-        title="Featured for you"
-        products={featured}
-        href="/products"
-        singleLineTitle
-        priorityCount={1}
-      />
-
       {trending.length > 0 && (
         <ProductShelf
           title="Trending now"
           products={trending}
           href="/products"
           singleLineTitle
+          priorityCount={1}
         />
       )}
 
-      <section className="py-6">
-        <SectionHeader title="All products" href="/products" />
-        <ProductGrid
-          products={products.slice(0, 4)}
-          singleLineTitle
-          cardVariant="shelf"
-          priorityCount={0}
-          emptyMessage={
-            shopifyConfigured
-              ? "No products found in your Shopify store yet."
-              : "Connect Shopify to load products from your store."
-          }
-        />
-      </section>
+      <ProductShelf
+        title="Rokn picks"
+        products={featured}
+        href="/products"
+        singleLineTitle
+      />
+
+      <ProductShelf
+        title="All products"
+        products={products}
+        href="/products"
+        singleLineTitle
+        trailingLink={{ label: "Browse everything", href: "/products" }}
+      />
     </div>
   );
 }
